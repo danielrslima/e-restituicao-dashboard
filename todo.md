@@ -171,3 +171,12 @@
 - [x] Remover justificação problemática (quebra de palavras)
 - [x] Ajustar espaçamentos para match com template Word
 - [ ] Testar PDFs e validar formatação final
+
+
+## Fase 22: Ajustes Finais de Espaçamento e Logo
+- [x] Substituir logo antigo pelo novo (logotipo-e-restituicaoIR.jpg)
+- [x] Aumentar espaço entre Data de Nascimento e seção A (8→10)
+- [x] Ajustar espaço entre item 1 e seção B (mantido em 8)
+- [x] Diminuir espaço após item 6 para título "CAMPOS E VALORES" (8→5)
+- [x] Adicionar espaçamento após tabela antes de "Observações" (10→12)
+- [ ] Testar PDF final e validar todos os espaçamentos

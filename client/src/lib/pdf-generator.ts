@@ -263,22 +263,17 @@ export async function generateEsclarecimentosPDF(form: IrpfFormData): Promise<vo
   const margin = 20;
   let yPos = 20;
 
-  // Logo e-Restituição no topo com texto
+  // Logo e-Restituição no topo (novo logo completo)
   try {
     const logoImg = new Image();
-    logoImg.src = "/logos/logo-e-restituicao-transparent.png";
+    logoImg.src = "/logos/logo-e-restituicao-novo.jpg";
     await new Promise((resolve) => {
       logoImg.onload = resolve;
       logoImg.onerror = resolve;
     });
     if (logoImg.complete) {
-      // Logo verde à esquerda
-      doc.addImage(logoImg, "PNG", (pageWidth - 80) / 2, yPos, 15, 15);
-      // Texto "e-Restituição" em preto ao lado
-      doc.setFont("Helvetica", "bold");
-      doc.setFontSize(16);
-      doc.setTextColor(0, 0, 0);
-      doc.text("e-Restituição", (pageWidth - 80) / 2 + 18, yPos + 11);
+      // Logo completo centralizado
+      doc.addImage(logoImg, "JPEG", (pageWidth - 60) / 2, yPos, 60, 15);
     }
   } catch (error) {
     console.warn("Erro ao carregar logo:", error);
@@ -311,7 +306,7 @@ export async function generateEsclarecimentosPDF(form: IrpfFormData): Promise<vo
   doc.text(`CPF: ${form.cpf}`, margin, yPos);
   yPos += 5;
   doc.text(`DATA DE NASCIMENTO: ${form.dataNascimento}`, margin, yPos);
-  yPos += 8;
+  yPos += 10; // Aumentado de 8 para 10
 
   // Seção A com sublinhado
   doc.setFont("Helvetica", "bold");
@@ -329,7 +324,7 @@ export async function generateEsclarecimentosPDF(form: IrpfFormData): Promise<vo
   const textoA = `1)    Os valores declarados se referem a rendimento recebido de forma acumulada, referente a Ação Judicial Trabalhista, processo n.º ${form.numeroProcesso} que tramitou perante a ${form.vara} de ${form.comarca}.`;
   const linhasA = doc.splitTextToSize(textoA, pageWidth - 2 * margin);
   doc.text(linhasA, margin, yPos);
-  yPos += linhasA.length * 5 + 8;
+  yPos += linhasA.length * 5 + 8; // Mantido para proporção consistente
 
   // Seção B com sublinhado
   doc.setFont("Helvetica", "bold");
@@ -356,7 +351,7 @@ export async function generateEsclarecimentosPDF(form: IrpfFormData): Promise<vo
 
   const linhasB = doc.splitTextToSize(textoB, pageWidth - 2 * margin);
   doc.text(linhasB, margin, yPos);
-  yPos += linhasB.length * 4 + 8;
+  yPos += linhasB.length * 4 + 5; // Reduzido de 8 para 5
 
   // Título da tabela RRA (centralizado com sublinhado)
   doc.setFont("Helvetica", "bold");
@@ -410,7 +405,7 @@ export async function generateEsclarecimentosPDF(form: IrpfFormData): Promise<vo
   doc.setFont("Helvetica", "normal");
   const rendimentosIsentos = form.brutoHomologado - form.tributavelHomologado;
   doc.text(formatCurrency(rendimentosIsentos), pageWidth - margin - 3, yPos + 4.5, { align: "right" });
-  yPos += 10;
+  yPos += 12; // Aumentado de 10 para 12
 
   // Observações
   doc.setFont("Helvetica", "bold");
