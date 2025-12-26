@@ -308,48 +308,104 @@ export async function generateEsclarecimentosPDF(form: IrpfFormData): Promise<vo
   doc.text(`DATA DE NASCIMENTO: ${form.dataNascimento}`, margin, yPos);
   yPos += 10; // Aumentado de 8 para 10
 
-  // Seção A (sem sublinhado)
+  // Seção A (COM sublinhado)
   doc.setFont("Helvetica", "bold");
   doc.setFontSize(9);
-  doc.text("A) DADOS DA AÇÃO:", margin, yPos);
+  const tituloA = "A) DADOS DA AÇÃO:";
+  doc.text(tituloA, margin, yPos);
+  // Adicionar sublinhado
+  const tituloAWidth = doc.getTextWidth(tituloA);
+  doc.setLineWidth(0.3);
+  doc.line(margin, yPos + 1, margin + tituloAWidth, yPos + 1);
   yPos += 6;
 
-  // Item 1) com indentação
+  // Item 1) - número próximo à margem, texto com pequena indentação
   doc.setFont("Helvetica", "normal");
   doc.setFontSize(9);
   doc.text("1)", margin, yPos);
   const textoA = `Os valores declarados se referem a rendimento recebido de forma acumulada, referente a Ação Judicial Trabalhista, processo n.º ${form.numeroProcesso} que tramitou perante a ${form.vara} de ${form.comarca}.`;
-  const linhasA = doc.splitTextToSize(textoA, pageWidth - 2 * margin - 10);
-  doc.text(linhasA, margin + 10, yPos);
-  yPos += linhasA.length * 5 + 8; // Mantido para proporção consistente
+  const linhasA = doc.splitTextToSize(textoA, pageWidth - 2 * margin - 12);
+  doc.text(linhasA, margin + 12, yPos);
+  yPos += linhasA.length * 5 + 8;
 
-  // Seção B (sem sublinhado)
+  // Seção B (COM sublinhado)
   doc.setFont("Helvetica", "bold");
   doc.setFontSize(9);
-  doc.text("B) VALORES E DATAS:", margin, yPos);
+  const tituloB = "B) VALORES E DATAS:";
+  doc.text(tituloB, margin, yPos);
+  // Adicionar sublinhado
+  const tituloBWidth = doc.getTextWidth(tituloB);
+  doc.setLineWidth(0.3);
+  doc.line(margin, yPos + 1, margin + tituloBWidth, yPos + 1);
   yPos += 6;
 
   doc.setFont("Helvetica", "normal");
   doc.setFontSize(9);
   const totalBruto = form.alvaraValor + form.darfValor;
   
-  const itensB = [
-    `2) O valor total levantado pelo(a) contribuinte, referente ao exercício foi de ${formatCurrency(totalBruto)};`,
-    `3) O imposto de renda no valor total de ${formatCurrency(form.darfValor)}, foi retido pela Reclamada ${form.fontePagadora} - CNPJ n.º ${form.cnpj}, conforme documento(s) anexo(s);`,
-    `4) O valor bruto da ação corresponde a soma entre o(s) alvará(s)/mandado(s) de levantamento e o imposto de renda retido, o que equivale, neste caso, ao valor de ${formatCurrency(form.baseCalculo)} (Item 3, da planilha);`,
-    `5) O valor atualizado apurado de ${formatCurrency(form.rendimentosTributavelAlvara)} (Item 8, da planilha), referente ao(s) Rendimento(s) Tributável(is), equivale(m) a ${form.proporcao} do valor bruto da ação (Item 3), conforme apurado em planilha anexa;`,
-    `6) O valor total apurado de despesas dedutíveis¹ com a ação judicial, sobre a mesma proporção dos rendimentos tributáveis, nos exatos termos da Lei, foi de ${formatCurrency(form.rendimentosTributavelHonorarios)}.`
-  ];
+  // Renderizar itens 2-6 com indentação e valores em negrito
+  const renderItemB = (numero: string, textoAntes: string, valor: string, textoDepois: string) => {
+    doc.setFont("Helvetica", "normal");
+    doc.text(numero, margin, yPos);
+    
+    // Calcular texto completo para quebra de linha
+    const textoCompleto = textoAntes + valor + textoDepois;
+    const linhasItem = doc.splitTextToSize(textoCompleto, pageWidth - 2 * margin - 12);
+    
+    // Renderizar com valor em negrito
+    let currentY = yPos;
+    linhasItem.forEach((linha: string) => {
+      // Verificar se esta linha contém o valor
+      if (linha.includes(valor) && valor.startsWith("R$")) {
+        const partes = linha.split(valor);
+        let xPos = margin + 12;
+        
+        if (partes[0]) {
+          doc.setFont("Helvetica", "normal");
+          doc.text(partes[0], xPos, currentY);
+          xPos += doc.getTextWidth(partes[0]);
+        }
+        
+        doc.setFont("Helvetica", "bold");
+        doc.text(valor, xPos, currentY);
+        xPos += doc.getTextWidth(valor);
+        
+        if (partes[1]) {
+          doc.setFont("Helvetica", "normal");
+          doc.text(partes[1], xPos, currentY);
+        }
+      } else {
+        doc.setFont("Helvetica", "normal");
+        doc.text(linha, margin + 12, currentY);
+      }
+      currentY += 5;
+    });
+    yPos = currentY + 3;
+  };
 
-  // Renderizar cada item separadamente com espaçamento
-  itensB.forEach((item) => {
-    const linhasItem = doc.splitTextToSize(item, pageWidth - 2 * margin);
-    doc.text(linhasItem, margin, yPos);
-    yPos += linhasItem.length * 5 + 3; // Espaço entre itens
-  });
+  // Item 2 - sem valor em negrito
+  doc.setFont("Helvetica", "normal");
+  doc.text("2)", margin, yPos);
+  const texto2 = `O valor total levantado pelo(a) contribuinte, referente ao exercício foi de ${formatCurrency(totalBruto)};`;
+  const linhas2 = doc.splitTextToSize(texto2, pageWidth - 2 * margin - 12);
+  doc.text(linhas2, margin + 12, yPos);
+  yPos += linhas2.length * 5 + 3;
+
+  // Item 3 - valor em negrito
+  renderItemB("3)", "O imposto de renda no valor total de ", formatCurrency(form.darfValor), `, foi retido por ${form.fontePagadora} - CNPJ n.º ${form.cnpj}, conforme documento(s) anexo(s);`);
+
+  // Item 4 - valor em negrito
+  renderItemB("4)", "O valor bruto da ação corresponde a soma entre o(s) alvará(s)/mandado(s) de levantamento e o imposto de renda retido, o que equivale, neste caso, ao valor de ", formatCurrency(form.baseCalculo), " (Item 3, da planilha);");
+
+  // Item 5 - valor em negrito
+  renderItemB("5)", "O valor atualizado apurado de ", formatCurrency(form.rendimentosTributavelAlvara), ` (Item 8, da planilha), referente ao(s) Rendimento(s) Tributável(is), equivale(m) a ${form.proporcao} do valor bruto da ação (Item 3), conforme apurado em planilha anexa;`);
+
+  // Item 6 - valor em negrito
+  renderItemB("6)", "O valor total apurado de despesas dedutíveis¹ com a ação judicial, sobre a mesma proporção dos rendimentos tributáveis, nos exatos termos da Lei, foi de ", formatCurrency(form.rendimentosTributavelHonorarios), ".");
+
   yPos += 2; // Espaço extra após último item
 
-  // Título da tabela RRA (centralizado sem sublinhado)
+  // Título da tabela RRA (centralizado, segunda linha COM sublinhado)
   doc.setFont("Helvetica", "bold");
   doc.setFontSize(9);
   const titulo1RRA = "CAMPOS E VALORES DECLARADOS NA FICHA DE RRA* DA DIRPF,";
@@ -357,6 +413,10 @@ export async function generateEsclarecimentosPDF(form: IrpfFormData): Promise<vo
   doc.text(titulo1RRA, pageWidth / 2, yPos, { align: "center" });
   yPos += 5;
   doc.text(titulo2RRA, pageWidth / 2, yPos, { align: "center" });
+  // Adicionar sublinhado na segunda linha
+  const titulo2RRAWidth = doc.getTextWidth(titulo2RRA);
+  doc.setLineWidth(0.3);
+  doc.line((pageWidth - titulo2RRAWidth) / 2, yPos + 1, (pageWidth + titulo2RRAWidth) / 2, yPos + 1);
   yPos += 8;
 
   // Tabela com bordas
@@ -414,7 +474,7 @@ b) O valor referente ao rendimento isento foi lançado na ficha de rendimentos i
   doc.text(obsLines, margin, yPos);
   yPos += obsLines.length * 4 + 8;
 
-  // Linha horizontal antes da referência legal
+  // Linha horizontal fina antes da referência legal (parcial)
   doc.setLineWidth(0.5);
   doc.line(margin, yPos, margin + 50, yPos);
   yPos += 5;
@@ -423,12 +483,12 @@ b) O valor referente ao rendimento isento foi lançado na ficha de rendimentos i
   doc.setFont("Helvetica", "normal");
   doc.setFontSize(8);
   doc.text("1 Art. 12.A, §2º da Lei 7.713/88", margin, yPos);
-  yPos += 8;
+  yPos += 12;
 
-  // Linha horizontal grossa após referência
-  doc.setLineWidth(1);
+  // Linha horizontal GROSSA (largura total) - ACIMA do logo IR360
+  doc.setLineWidth(1.5);
   doc.line(margin, yPos, pageWidth - margin, yPos);
-  yPos += 10;
+  yPos += 8;
 
   // Logo IR360 no rodapé
   try {
