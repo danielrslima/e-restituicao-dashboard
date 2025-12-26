@@ -64,6 +64,10 @@ export const irpfForms = mysqlTable("irpf_forms", {
   irpfRestituir: int("irpf_restituir").notNull(), // Resultado final em centavos
   // Status e metadados
   statusPagamento: mysqlEnum("status_pagamento", ["pendente", "pago", "cancelado"]).default("pendente").notNull(),
+  tipoAcesso: mysqlEnum("tipo_acesso", ["free", "pago"]).default("pago").notNull(),
+  dataPagamento: timestamp("data_pagamento"),
+  dataAgendamentoEmail: timestamp("data_agendamento_email"),
+  statusEmail: mysqlEnum("status_email", ["pendente", "agendado", "enviado", "erro"]).default("pendente"),
   asaasPaymentId: varchar("asaas_payment_id", { length: 100 }),
   asaasStatus: varchar("asaas_status", { length: 50 }),
   firebaseDocId: varchar("firebase_doc_id", { length: 100 }),

@@ -54,3 +54,18 @@
 - [x] Criar checkpoint final
 - [x] Documentar instruções de uso
 - [x] Entregar ao usuário
+
+
+## Fase 8: Modelo Free (Interno)
+- [x] Adicionar campo tipoAcesso (Free/Pago) no schema
+- [x] Criar formulário sem pagamento para clientes internos
+- [x] Indicador visual de "Free/Interno" no dashboard
+- [ ] Filtro por tipo de acesso no dashboard
+
+## Fase 9: Agendamento de Emails (7 dias)
+- [x] Adicionar campos de agendamento no schema (dataAgendamentoEmail, statusEmail)
+- [x] Implementar lógica de cálculo de data (pagamento + 7 dias)
+- [x] Criar fila de envio de emails com status
+- [ ] Implementar job de envio automático após 7 dias
+- [x] Adicionar coluna de status de email no dashboard
+- [ ] Testar sistema de agendamento

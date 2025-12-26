@@ -253,6 +253,45 @@ export default function FormularioDetalhes() {
             </p>
           </CardContent>
         </Card>
+
+        {/* Tipo de Acesso */}
+        <Card>
+          <CardHeader>
+            <CardTitle>Tipo de Acesso</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="inline-block px-3 py-1 rounded-full text-sm font-semibold" style={{
+              backgroundColor: form.tipoAcesso === 'free' ? '#dbeafe' : '#e9d5ff',
+              color: form.tipoAcesso === 'free' ? '#1e40af' : '#6b21a8'
+            }}>
+              {form.tipoAcesso === 'free' ? 'Interno (Free)' : 'Pago'}
+            </div>
+          </CardContent>
+        </Card>
+
+        {/* Status de Email */}
+        <Card>
+          <CardHeader>
+            <CardTitle>Status de Email</CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-3">
+            <div>
+              <div className="text-sm font-medium text-muted-foreground mb-1">Status</div>
+              <div className="inline-block px-3 py-1 rounded-full text-sm font-semibold" style={{
+                backgroundColor: form.statusEmail === 'enviado' ? '#dcfce7' : form.statusEmail === 'agendado' ? '#fef3c7' : form.statusEmail === 'erro' ? '#fee2e2' : '#f3f4f6',
+                color: form.statusEmail === 'enviado' ? '#166534' : form.statusEmail === 'agendado' ? '#92400e' : form.statusEmail === 'erro' ? '#991b1b' : '#374151'
+              }}>
+                {form.statusEmail === 'enviado' ? 'Enviado' : form.statusEmail === 'agendado' ? 'Agendado' : form.statusEmail === 'erro' ? 'Erro' : 'Pendente'}
+              </div>
+            </div>
+            {form.dataAgendamentoEmail && (
+              <div>
+                <div className="text-sm font-medium text-muted-foreground">Agendado para</div>
+                <div className="text-sm mt-1">{formatDate(form.dataAgendamentoEmail)}</div>
+              </div>
+            )}
+          </CardContent>
+        </Card>
       </div>
 
       {/* Botões de Ação */}

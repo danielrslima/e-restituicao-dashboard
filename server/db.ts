@@ -1,4 +1,4 @@
-import { eq, or, like, desc } from "drizzle-orm";
+import { eq, or, like, desc, and, isNull, lte } from "drizzle-orm";
 import { drizzle } from "drizzle-orm/mysql2";
 import { InsertUser, users, irpfForms, InsertIrpfForm } from "../drizzle/schema";
 import { ENV } from './_core/env';
@@ -159,4 +159,102 @@ export async function deleteIrpfForm(id: number) {
   if (!db) throw new Error("Database not available");
 
   await db.delete(irpfForms).where(eq(irpfForms.id, id));
+}
+
+
+// ============================================================================
+// IRPF Forms - Email Scheduling Helpers
+// ============================================================================
+
+/**
+ * Obter formulários que precisam de agendamento de email (7 dias após pagamento)
+ */
+export async function getFormsNeedingEmailScheduling() {
+  const db = await getDb();
+  if (!db) return [];
+
+  try {
+    const query = await db
+      .select()
+      .from(irpfForms)
+      .where(
+        and(
+          eq(irpfForms.statusPagamento, "pago"),
+          isNull(irpfForms.dataAgendamentoEmail)
+        )
+      );
+    return query;
+  } catch (error) {
+    console.error("[Database] Failed to get forms needing email scheduling:", error);
+    return [];
+  }
+}
+
+/**
+ * Obter formulários prontos para envio de email (data agendada chegou)
+ */
+export async function getFormsReadyForEmailSending() {
+  const db = await getDb();
+  if (!db) return [];
+
+  try {
+    const agora = new Date();
+    const query = await db
+      .select()
+      .from(irpfForms)
+      .where(
+        and(
+          eq(irpfForms.statusEmail, "agendado"),
+          lte(irpfForms.dataAgendamentoEmail, agora)
+        )
+      );
+    return query;
+  } catch (error) {
+    console.error("[Database] Failed to get forms ready for email sending:", error);
+    return [];
+  }
+}
+
+/**
+ * Atualizar agendamento de email
+ */
+export async function updateEmailScheduling(
+  formId: number,
+  dataAgendamento: Date,
+  status: "agendado" | "enviado" | "erro"
+) {
+  const db = await getDb();
+  if (!db) return;
+
+  try {
+    await db
+      .update(irpfForms)
+      .set({
+        dataAgendamentoEmail: dataAgendamento,
+        statusEmail: status,
+        updatedAt: new Date(),
+      })
+      .where(eq(irpfForms.id, formId));
+  } catch (error) {
+    console.error("[Database] Failed to update email scheduling:", error);
+  }
+}
+
+/**
+ * Obter formulários por tipo de acesso (free ou pago)
+ */
+export async function getFormsByAccessType(tipoAcesso: "free" | "pago") {
+  const db = await getDb();
+  if (!db) return [];
+
+  try {
+    const query = await db
+      .select()
+      .from(irpfForms)
+      .where(eq(irpfForms.tipoAcesso, tipoAcesso));
+    return query;
+  } catch (error) {
+    console.error("[Database] Failed to get forms by access type:", error);
+    return [];
+  }
 }
