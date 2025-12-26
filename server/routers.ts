@@ -4,7 +4,7 @@ import { systemRouter } from "./_core/systemRouter";
 import { publicProcedure, router, protectedProcedure } from "./_core/trpc";
 import { z } from "zod";
 import { TRPCError } from "@trpc/server";
-import { getAllIrpfForms, getIrpfFormById, updateKitIRStatus } from "./db";
+import { getAllIrpfForms, getIrpfFormById, updateKitIRStatus, syncFormularioFromFirebase } from "./db";
 
 // Admin-only procedure
 const adminProcedure = protectedProcedure.use(({ ctx, next }) => {
@@ -60,6 +60,16 @@ export const appRouter = router({
       )
       .mutation(async ({ input }) => {
         await updateKitIRStatus(input.formId, input.statusKitIR);
+        return { success: true };
+      }),
+    syncFromFirebase: adminProcedure
+      .input(
+        z.object({
+          firebaseData: z.any(),
+        })
+      )
+      .mutation(async ({ input }) => {
+        await syncFormularioFromFirebase(input.firebaseData);
         return { success: true };
       }),
   }),

@@ -96,3 +96,13 @@
 - [ ] Testar envio de emails
 - [ ] Testar geração de PDFs
 - [ ] Validar sistema completo
+
+
+## Fase 14: Integração Firebase Firestore (Em Progresso)
+- [x] Configurar credenciais Firebase no servidor
+- [x] Instalar SDK Firebase Admin
+- [x] Criar helpers para conectar ao Firestore
+- [x] Implementar listener de mudanças em tempo real
+- [x] Sincronizar dados do Firebase com banco de dados local
+- [ ] Atualizar dashboard para exibir dados do Firebase
+- [ ] Testar sincronização em tempo real

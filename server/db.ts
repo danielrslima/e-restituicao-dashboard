@@ -370,3 +370,103 @@ export async function getFormsByKitIRStatus(statusKitIR: string) {
     return [];
   }
 }
+
+
+/**
+ * Sincroniza um formulário do Firebase para o banco de dados local
+ */
+export async function syncFormularioFromFirebase(firebaseData: any) {
+  const db = await getDb();
+  if (!db) {
+    console.warn("[Database] Cannot sync from Firebase: database not available");
+    return;
+  }
+
+  try {
+    // Mapear dados do Firebase para o schema local
+    const formData = {
+      // Dados pessoais
+      nomeCliente: firebaseData.nomeCompleto || '',
+      cpf: firebaseData.cpf || '',
+      email: firebaseData.email || '',
+      telefone: firebaseData.telefone || null,
+      dataNascimento: firebaseData.dataNascimento || '',
+      
+      // Dados processuais
+      numeroProcesso: firebaseData.numeroProcesso || '',
+      vara: firebaseData.vara || '',
+      comarca: firebaseData.comarca || '',
+      fontePagadora: firebaseData.fontePagadora || '',
+      cnpj: firebaseData.cnpj || '',
+      
+      // Valores
+      brutoHomologado: firebaseData.brutoHomologado || 0,
+      tributavelHomologado: firebaseData.tributavelHomologado || 0,
+      numeroMeses: firebaseData.numeroMeses || 0,
+      
+      // Alvará, DARF e Honorários (primeiro de cada array)
+      alvaraValor: firebaseData.alvaras?.[0]?.valor || 0,
+      alvaraData: firebaseData.alvaras?.[0]?.data || '',
+      darfValor: firebaseData.darfs?.[0]?.valor || 0,
+      darfData: firebaseData.darfs?.[0]?.data || '',
+      honorariosValor: firebaseData.honorarios?.[0]?.valor || 0,
+      honorariosAno: firebaseData.honorarios?.[0]?.ano || '',
+      
+      // Valores calculados
+      proporcao: firebaseData.proporcao || '0%',
+      rendimentosTributavelAlvara: firebaseData.rendimentosTributavelAlvara || 0,
+      rendimentosTributavelHonorarios: firebaseData.rendimentosTributavelHonorarios || 0,
+      baseCalculo: firebaseData.baseCalculo || 0,
+      rra: firebaseData.rra || '0',
+      irMensal: firebaseData.irMensal || '0',
+      irDevido: firebaseData.irDevido || 0,
+      irpfRestituir: firebaseData.irpfRestituir || 0,
+      
+      // Tipo de acesso e pagamento
+      tipoAcesso: (firebaseData.tipoAcesso || 'pago') as 'free' | 'pago',
+      statusPagamento: (firebaseData.statusPagamento || 'pendente') as 'pendente' | 'pago' | 'cancelado',
+      dataPagamento: firebaseData.dataPagamento ? new Date(firebaseData.dataPagamento) : null,
+      asaasPaymentId: firebaseData.asaasPaymentId || null,
+      asaasStatus: firebaseData.asaasStatus || null,
+      
+      // Kit IR (segundo pagamento)
+      statusKitIR: (firebaseData.statusKitIR || 'nao_solicitado') as 'nao_solicitado' | 'pendente' | 'pago' | 'enviado' | 'cancelado',
+      dataPagamentoKit: firebaseData.dataPagamentoKit ? new Date(firebaseData.dataPagamentoKit) : null,
+      asaasPaymentIdKit: firebaseData.asaasPaymentIdKit || null,
+      asaasStatusKit: firebaseData.asaasStatusKit || null,
+      
+      // Agendamento de email
+      dataAgendamentoEmail: firebaseData.dataAgendamentoEmail ? new Date(firebaseData.dataAgendamentoEmail) : null,
+      statusEmail: (firebaseData.statusEmail || 'pendente') as 'pendente' | 'agendado' | 'enviado' | 'erro',
+      
+      // Envio de Kit IR
+      dataEnvioKit: firebaseData.dataEnvioKit ? new Date(firebaseData.dataEnvioKit) : null,
+      statusEnvioKit: (firebaseData.statusEnvioKit || 'pendente') as 'pendente' | 'agendado' | 'enviado' | 'erro',
+      
+      // Firebase ID
+      firebaseDocId: firebaseData.id || null,
+    };
+
+    // Verificar se já existe no banco local
+    const existing = await db
+      .select()
+      .from(irpfForms)
+      .where(eq(irpfForms.firebaseDocId, formData.firebaseDocId))
+      .limit(1);
+
+    if (existing.length > 0) {
+      // Atualizar
+      await db
+        .update(irpfForms)
+        .set(formData)
+        .where(eq(irpfForms.firebaseDocId, formData.firebaseDocId));
+      console.log(`[Database] Formulário ${formData.firebaseDocId} atualizado`);
+    } else {
+      // Inserir
+      await db.insert(irpfForms).values(formData);
+      console.log(`[Database] Formulário ${formData.firebaseDocId} inserido`);
+    }
+  } catch (error) {
+    console.error("[Database] Erro ao sincronizar formulário do Firebase:", error);
+  }
+}
