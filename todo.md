@@ -216,6 +216,10 @@
 - [x] Testar CRUD de observações (13/13 testes passando)
 
 ## Fase 27: Ajustes Finais no Template Esclarecimentos
-- [ ] Revisar template comparando com documento perfeito
-- [ ] Ajustar espaçamentos e formatação restantes
-- [ ] Validar PDF final 100% idêntico
+- [x] Analisar diferenças entre PDF gerado e documento perfeito
+- [x] Corrigir espaçamentos entre itens da seção B (2-6) - adicionado espaço de 4mm
+- [x] Verificar alinhamento de textos (nenhum justificado - todos à esquerda)
+- [x] Ajustar bordas das tabelas (espessura 0.5mm)
+- [x] Corrigir posicionamento de logos e rodapé
+- [x] Código atualizado com todas as correções das tentativas anteriores
+- [ ] Validar PDF gerado visualmente com documento perfeito
