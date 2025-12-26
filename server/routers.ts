@@ -4,7 +4,7 @@ import { systemRouter } from "./_core/systemRouter";
 import { publicProcedure, router, protectedProcedure } from "./_core/trpc";
 import { z } from "zod";
 import { TRPCError } from "@trpc/server";
-import { getAllIrpfForms, getIrpfFormById } from "./db";
+import { getAllIrpfForms, getIrpfFormById, updateKitIRStatus } from "./db";
 
 // Admin-only procedure
 const adminProcedure = protectedProcedure.use(({ ctx, next }) => {
@@ -15,7 +15,6 @@ const adminProcedure = protectedProcedure.use(({ ctx, next }) => {
 });
 
 export const appRouter = router({
-    // if you need to use socket.io, read and register route in server/_core/index.ts, all api should start with '/api/' so that the gateway can route correctly
   system: systemRouter,
   auth: router({
     me: publicProcedure.query(opts => opts.ctx.user),
@@ -51,6 +50,17 @@ export const appRouter = router({
           throw new TRPCError({ code: 'FORBIDDEN' });
         }
         return getIrpfFormById(input.id);
+      }),
+    updateKitIRStatus: adminProcedure
+      .input(
+        z.object({
+          formId: z.number(),
+          statusKitIR: z.enum(["nao_solicitado", "pendente", "pago", "enviado", "cancelado"]),
+        })
+      )
+      .mutation(async ({ input }) => {
+        await updateKitIRStatus(input.formId, input.statusKitIR);
+        return { success: true };
       }),
   }),
 });

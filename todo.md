@@ -69,3 +69,30 @@
 - [ ] Implementar job de envio automático após 7 dias
 - [x] Adicionar coluna de status de email no dashboard
 - [ ] Testar sistema de agendamento
+
+
+## Fase 10: Segundo Pagamento (Kit IR)
+- [x] Adicionar campo dataPagamentoKit no schema
+- [x] Adicionar campo statusKitIR (pendente/pago/enviado) no schema
+- [x] Criar helpers para gerenciar segundo pagamento
+- [ ] Adicionar indicador visual de Kit IR no dashboard
+
+## Fase 11: Integração Firebase Firestore
+- [ ] Configurar credenciais Firebase no servidor
+- [ ] Criar helpers para sincronizar dados do Firebase
+- [ ] Implementar listener de mudanças em tempo real
+- [ ] Mapear dados do Firebase para tabela local
+
+## Fase 12: Sistema de Envio de Emails
+- [x] Instalar Nodemailer ou SendGrid
+- [x] Configurar email kitir@e-restituicao.com.br
+- [ ] Criar helper de geração de PDF para email
+- [x] Implementar fila de emails com status
+- [x] Criar job de envio automático (7 dias após pagamento)
+- [x] Adicionar rastreamento de envio
+
+## Fase 13: Testes e Validação
+- [ ] Testar sincronização Firebase
+- [ ] Testar envio de emails
+- [ ] Testar geração de PDFs
+- [ ] Validar sistema completo

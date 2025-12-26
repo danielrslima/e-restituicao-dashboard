@@ -258,3 +258,115 @@ export async function getFormsByAccessType(tipoAcesso: "free" | "pago") {
     return [];
   }
 }
+
+
+// ============================================================================
+// Kit IR - Segundo Pagamento
+// ============================================================================
+
+/**
+ * Obter formulários que precisam de envio de Kit IR (7 dias após pagamento do Kit)
+ */
+export async function getFormsReadyForKitIRSending() {
+  const db = await getDb();
+  if (!db) return [];
+
+  try {
+    const agora = new Date();
+    const query = await db
+      .select()
+      .from(irpfForms)
+      .where(
+        and(
+          eq(irpfForms.statusKitIR, "pago"),
+          eq(irpfForms.statusEnvioKit, "agendado"),
+          lte(irpfForms.dataEnvioKit, agora)
+        )
+      );
+    return query;
+  } catch (error) {
+    console.error("[Database] Failed to get forms ready for Kit IR sending:", error);
+    return [];
+  }
+}
+
+/**
+ * Atualizar status do Kit IR
+ */
+export async function updateKitIRStatus(
+  formId: number,
+  statusKitIR: "nao_solicitado" | "pendente" | "pago" | "enviado" | "cancelado",
+  statusEnvioKit?: "pendente" | "agendado" | "enviado" | "erro",
+  dataEnvioKit?: Date
+) {
+  const db = await getDb();
+  if (!db) return;
+
+  try {
+    const updateData: any = {
+      statusKitIR,
+      updatedAt: new Date(),
+    };
+
+    if (statusEnvioKit) {
+      updateData.statusEnvioKit = statusEnvioKit;
+    }
+
+    if (dataEnvioKit) {
+      updateData.dataEnvioKit = dataEnvioKit;
+    }
+
+    await db
+      .update(irpfForms)
+      .set(updateData)
+      .where(eq(irpfForms.id, formId));
+  } catch (error) {
+    console.error("[Database] Failed to update Kit IR status:", error);
+  }
+}
+
+/**
+ * Agendar envio de Kit IR (7 dias após pagamento)
+ */
+export async function agendarEnvioKitIR(formId: number, dataPagamentoKit: Date) {
+  const db = await getDb();
+  if (!db) return;
+
+  try {
+    // Calcular data de envio (7 dias após pagamento)
+    const dataEnvio = new Date(dataPagamentoKit);
+    dataEnvio.setDate(dataEnvio.getDate() + 7);
+
+    await db
+      .update(irpfForms)
+      .set({
+        statusEnvioKit: "agendado",
+        dataEnvioKit: dataEnvio,
+        updatedAt: new Date(),
+      })
+      .where(eq(irpfForms.id, formId));
+
+    console.log(`[Kit IR] Envio agendado para ${dataEnvio.toISOString()}`);
+  } catch (error) {
+    console.error("[Database] Failed to schedule Kit IR sending:", error);
+  }
+}
+
+/**
+ * Obter formulários por status de Kit IR
+ */
+export async function getFormsByKitIRStatus(statusKitIR: string) {
+  const db = await getDb();
+  if (!db) return [];
+
+  try {
+    const query = await db
+      .select()
+      .from(irpfForms)
+      .where(eq(irpfForms.statusKitIR, statusKitIR as any));
+    return query;
+  } catch (error) {
+    console.error("[Database] Failed to get forms by Kit IR status:", error);
+    return [];
+  }
+}
