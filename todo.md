@@ -152,3 +152,22 @@
 - [x] Aplicar justificação (align: justify) em todos os textos das seções A, B e Obs
 - [x] Reformatar seção A para começar com "1)"
 - [ ] Testar PDFs e validar que todos os valores estão visíveis e alinhados
+
+
+## Fase 20: Ajuste Fino de Espaçamentos nos Esclarecimentos
+- [x] Adicionar indentação ao item 1) da seção A
+- [x] Aumentar espaçamento entre seções (A, B, tabelas)
+- [x] Tornar linhas horizontais mais grossas (0.8-1mm)
+- [x] Tornar bordas das tabelas mais grossas (0.8mm)
+- [x] Adicionar "Observações.:" com pontuação correta
+- [x] Adicionar linhas horizontais antes e depois da referência legal
+- [x] Centralizar títulos das tabelas
+- [x] Adicionar sublinhados aos títulos das seções
+- [ ] Validar espaçamentos comparando com template original
+
+
+## Fase 21: Ajuste Final de Formatação dos PDFs
+- [x] Copiar template Word para referência
+- [x] Remover justificação problemática (quebra de palavras)
+- [x] Ajustar espaçamentos para match com template Word
+- [ ] Testar PDFs e validar formatação final
