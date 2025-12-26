@@ -1,31 +1,59 @@
 import { useAuth } from "@/_core/hooks/useAuth";
-import { Button } from "@/components/ui/button";
+import { useLocation } from "wouter";
+import { useEffect } from "react";
 import { Loader2 } from "lucide-react";
-import { getLoginUrl } from "@/const";
-import { Streamdown } from 'streamdown';
 
 /**
- * All content in this page are only for example, replace with your own feature implementation
- * When building pages, remember your instructions in Frontend Workflow, Frontend Best Practices, Design Guide and Common Pitfalls
+ * Página Home - Redireciona para o Dashboard se autenticado
  */
 export default function Home() {
-  // The userAuth hooks provides authentication state
-  // To implement login/logout functionality, simply call logout() or redirect to getLoginUrl()
-  let { user, loading, error, isAuthenticated, logout } = useAuth();
+  const { user, loading, isAuthenticated } = useAuth();
+  const [, setLocation] = useLocation();
 
-  // If theme is switchable in App.tsx, we can implement theme toggling like this:
-  // const { theme, toggleTheme } = useTheme();
+  useEffect(() => {
+    // Se o usuário está autenticado e é admin, redireciona para o dashboard
+    if (isAuthenticated && user?.role === "admin") {
+      setLocation("/dashboard");
+    }
+  }, [isAuthenticated, user, setLocation]);
 
+  // Mostrar loading enquanto verifica autenticação
+  if (loading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="flex flex-col items-center gap-4">
+          <Loader2 className="w-8 h-8 animate-spin text-primary" />
+          <p className="text-muted-foreground">Carregando...</p>
+        </div>
+      </div>
+    );
+  }
+
+  // Se não está autenticado, mostrar mensagem de acesso restrito
+  if (!isAuthenticated) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-slate-50 to-slate-100">
+        <div className="text-center space-y-4 max-w-md">
+          <h1 className="text-3xl font-bold text-slate-900">e-Restituição</h1>
+          <p className="text-slate-600">Dashboard Administrativo</p>
+          <p className="text-sm text-slate-500 mt-8">
+            Acesso restrito. Apenas administradores podem acessar este painel.
+          </p>
+        </div>
+      </div>
+    );
+  }
+
+  // Se está autenticado mas não é admin
   return (
-    <div className="min-h-screen flex flex-col">
-      <main>
-        {/* Example: lucide-react for icons */}
-        <Loader2 className="animate-spin" />
-        Example Page
-        {/* Example: Streamdown for markdown rendering */}
-        <Streamdown>Any **markdown** content</Streamdown>
-        <Button variant="default">Example Button</Button>
-      </main>
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-slate-50 to-slate-100">
+      <div className="text-center space-y-4 max-w-md">
+        <h1 className="text-3xl font-bold text-slate-900">e-Restituição</h1>
+        <p className="text-slate-600">Dashboard Administrativo</p>
+        <p className="text-sm text-slate-500 mt-8">
+          Você não tem permissão para acessar este painel.
+        </p>
+      </div>
     </div>
   );
 }

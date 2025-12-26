@@ -24,7 +24,7 @@ export default function Dashboard() {
 
   const { data: forms, isLoading, error } = trpc.irpf.list.useQuery({
     search: search || undefined,
-    statusPagamento: statusFilter || undefined,
+    statusPagamento: statusFilter && statusFilter !== "all" ? statusFilter : undefined,
   });
 
   const getStatusBadge = (status: string) => {
@@ -61,7 +61,7 @@ export default function Dashboard() {
             <SelectValue placeholder="Status de Pagamento" />
           </SelectTrigger>
           <SelectContent>
-            <SelectItem value="">Todos</SelectItem>
+            <SelectItem value="all">Todos</SelectItem>
             <SelectItem value="pago">Pago</SelectItem>
             <SelectItem value="pendente">Pendente</SelectItem>
             <SelectItem value="cancelado">Cancelado</SelectItem>
