@@ -308,52 +308,48 @@ export async function generateEsclarecimentosPDF(form: IrpfFormData): Promise<vo
   doc.text(`DATA DE NASCIMENTO: ${form.dataNascimento}`, margin, yPos);
   yPos += 10; // Aumentado de 8 para 10
 
-  // Seção A com sublinhado
+  // Seção A (sem sublinhado)
   doc.setFont("Helvetica", "bold");
   doc.setFontSize(9);
   doc.text("A) DADOS DA AÇÃO:", margin, yPos);
-  // Sublinhado
-  const tituloAWidth = doc.getTextWidth("A) DADOS DA AÇÃO:");
-  doc.line(margin, yPos + 1, margin + tituloAWidth, yPos + 1);
-  yPos += 7;
+  yPos += 6;
 
   // Item 1) com indentação
   doc.setFont("Helvetica", "normal");
   doc.setFontSize(9);
-  const indent = 5; // Indentação de 5mm
-  const textoA = `1)    Os valores declarados se referem a rendimento recebido de forma acumulada, referente a Ação Judicial Trabalhista, processo n.º ${form.numeroProcesso} que tramitou perante a ${form.vara} de ${form.comarca}.`;
-  const linhasA = doc.splitTextToSize(textoA, pageWidth - 2 * margin);
-  doc.text(linhasA, margin, yPos);
+  doc.text("1)", margin, yPos);
+  const textoA = `Os valores declarados se referem a rendimento recebido de forma acumulada, referente a Ação Judicial Trabalhista, processo n.º ${form.numeroProcesso} que tramitou perante a ${form.vara} de ${form.comarca}.`;
+  const linhasA = doc.splitTextToSize(textoA, pageWidth - 2 * margin - 10);
+  doc.text(linhasA, margin + 10, yPos);
   yPos += linhasA.length * 5 + 8; // Mantido para proporção consistente
 
-  // Seção B com sublinhado
+  // Seção B (sem sublinhado)
   doc.setFont("Helvetica", "bold");
   doc.setFontSize(9);
   doc.text("B) VALORES E DATAS:", margin, yPos);
-  // Sublinhado
-  const tituloBWidth = doc.getTextWidth("B) VALORES E DATAS:");
-  doc.line(margin, yPos + 1, margin + tituloBWidth, yPos + 1);
-  yPos += 7;
+  yPos += 6;
 
   doc.setFont("Helvetica", "normal");
   doc.setFontSize(9);
   const totalBruto = form.alvaraValor + form.darfValor;
   
-  const textoB = `2) O valor total levantado pelo(a) contribuinte, referente ao exercício foi de ${formatCurrency(totalBruto)};
+  const itensB = [
+    `2) O valor total levantado pelo(a) contribuinte, referente ao exercício foi de ${formatCurrency(totalBruto)};`,
+    `3) O imposto de renda no valor total de ${formatCurrency(form.darfValor)}, foi retido pela Reclamada ${form.fontePagadora} - CNPJ n.º ${form.cnpj}, conforme documento(s) anexo(s);`,
+    `4) O valor bruto da ação corresponde a soma entre o(s) alvará(s)/mandado(s) de levantamento e o imposto de renda retido, o que equivale, neste caso, ao valor de ${formatCurrency(form.baseCalculo)} (Item 3, da planilha);`,
+    `5) O valor atualizado apurado de ${formatCurrency(form.rendimentosTributavelAlvara)} (Item 8, da planilha), referente ao(s) Rendimento(s) Tributável(is), equivale(m) a ${form.proporcao} do valor bruto da ação (Item 3), conforme apurado em planilha anexa;`,
+    `6) O valor total apurado de despesas dedutíveis¹ com a ação judicial, sobre a mesma proporção dos rendimentos tributáveis, nos exatos termos da Lei, foi de ${formatCurrency(form.rendimentosTributavelHonorarios)}.`
+  ];
 
-3) O imposto de renda no valor total de ${formatCurrency(form.darfValor)}, foi retido pela Reclamada ${form.fontePagadora} - CNPJ n.º ${form.cnpj}, conforme documento(s) anexo(s);
+  // Renderizar cada item separadamente com espaçamento
+  itensB.forEach((item) => {
+    const linhasItem = doc.splitTextToSize(item, pageWidth - 2 * margin);
+    doc.text(linhasItem, margin, yPos);
+    yPos += linhasItem.length * 5 + 3; // Espaço entre itens
+  });
+  yPos += 2; // Espaço extra após último item
 
-4) O valor bruto da ação corresponde a soma entre o(s) alvará(s)/mandado(s) de levantamento e o imposto de renda retido, o que equivale, neste caso, ao valor de ${formatCurrency(totalBruto)} (Item 3, da planilha);
-
-5) O valor atualizado apurado de ${formatCurrency(form.rendimentosTributavelAlvara)} (Item 8, da planilha), referente ao(s) Rendimento(s) Tributável(is), equivale(m) a ${form.proporcao} do valor bruto da ação (Item 3), conforme apurado em planilha anexa;
-
-6) O valor total apurado de despesas dedutíveis¹ com a ação judicial, sobre a mesma proporção dos rendimentos tributáveis, nos exatos termos da Lei, foi de ${formatCurrency(form.rendimentosTributavelHonorarios)}.`;
-
-  const linhasB = doc.splitTextToSize(textoB, pageWidth - 2 * margin);
-  doc.text(linhasB, margin, yPos);
-  yPos += linhasB.length * 4 + 5; // Reduzido de 8 para 5
-
-  // Título da tabela RRA (centralizado com sublinhado)
+  // Título da tabela RRA (centralizado sem sublinhado)
   doc.setFont("Helvetica", "bold");
   doc.setFontSize(9);
   const titulo1RRA = "CAMPOS E VALORES DECLARADOS NA FICHA DE RRA* DA DIRPF,";
@@ -361,9 +357,6 @@ export async function generateEsclarecimentosPDF(form: IrpfFormData): Promise<vo
   doc.text(titulo1RRA, pageWidth / 2, yPos, { align: "center" });
   yPos += 5;
   doc.text(titulo2RRA, pageWidth / 2, yPos, { align: "center" });
-  // Sublinhado
-  const titulo2Width = doc.getTextWidth(titulo2RRA);
-  doc.line((pageWidth - titulo2Width) / 2, yPos + 1, (pageWidth + titulo2Width) / 2, yPos + 1);
   yPos += 8;
 
   // Tabela com bordas
@@ -375,10 +368,9 @@ export async function generateEsclarecimentosPDF(form: IrpfFormData): Promise<vo
   ];
 
   tabelaRRA.forEach((row) => {
-    doc.setLineWidth(0.8); // Bordas grossas
+    doc.setLineWidth(0.5); // Bordas médias
     doc.rect(margin, yPos, pageWidth - 2 * margin, 7, "S");
     doc.line(pageWidth - margin - 45, yPos, pageWidth - margin - 45, yPos + 7);
-    doc.setLineWidth(0.2); // Reset
     doc.setFont("Helvetica", "bold");
     doc.setFontSize(8);
     doc.text(row[0], margin + 2, yPos + 4.5);
@@ -395,9 +387,8 @@ export async function generateEsclarecimentosPDF(form: IrpfFormData): Promise<vo
   doc.text("FICHA DE RENDIMENTOS ISENTOS", pageWidth / 2, yPos, { align: "center" });
   yPos += 7;
 
-  doc.setLineWidth(0.8); // Bordas grossas
+  doc.setLineWidth(0.5); // Bordas médias
   doc.rect(margin, yPos, pageWidth - 2 * margin, 7, "S");
-  doc.setLineWidth(0.2); // Reset
   doc.line(pageWidth - margin - 45, yPos, pageWidth - margin - 45, yPos + 7);
   doc.setFont("Helvetica", "bold");
   doc.setFontSize(8);

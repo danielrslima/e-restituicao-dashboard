@@ -180,3 +180,13 @@
 - [x] Diminuir espaço após item 6 para título "CAMPOS E VALORES" (8→5)
 - [x] Adicionar espaçamento após tabela antes de "Observações" (10→12)
 - [ ] Testar PDF final e validar todos os espaçamentos
+
+
+## Fase 23: Correções Finais para Match 100% com Documento Perfeito
+- [x] Remover sublinhados dos títulos A) e B)
+- [x] Adicionar recuo/indentação ao item 1) (10mm)
+- [x] Aumentar espaçamento entre itens 2-6 (parágrafos separados)
+- [x] Remover sublinhado do título "CAMPOS E VALORES..."
+- [x] Ajustar espessura das bordas das tabelas (0.5mm)
+- [x] Ajustar espaçamentos gerais entre seções
+- [ ] Testar e validar PDF final 100% idêntico
