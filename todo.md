@@ -98,7 +98,7 @@
 - [ ] Validar sistema completo
 
 
-## Fase 14: Integração Firebase Firestore (Em Progresso)
+## Fase 14: Integração Firebase Firestore
 - [x] Configurar credenciais Firebase no servidor
 - [x] Instalar SDK Firebase Admin
 - [x] Criar helpers para conectar ao Firestore
@@ -106,3 +106,22 @@
 - [x] Sincronizar dados do Firebase com banco de dados local
 - [ ] Atualizar dashboard para exibir dados do Firebase
 - [ ] Testar sincronização em tempo real
+
+## Fase 15: Script de Seed e Testes
+- [x] Criar script para popular Firebase com dados de teste
+- [x] Testar sincronização automática Firebase → Banco Local
+- [x] Validar que dados aparecem no dashboard em tempo real
+
+## Fase 16: Webhook ASAAS
+- [x] Criar endpoint webhook para receber notificações ASAAS
+- [x] Validar assinatura do webhook
+- [x] Atualizar statusKitIR automaticamente ao receber pagamento
+- [x] Acionar agendamento de email após confirmação
+- [x] Testar webhook com dados de teste
+
+## Fase 17: Job de Envio Automático
+- [ ] Criar cron job para verificar emails agendados
+- [ ] Implementar envio automático de PDFs por email
+- [ ] Atualizar status após envio bem-sucedido
+- [ ] Implementar retry em caso de falha
+- [ ] Testar job completo
