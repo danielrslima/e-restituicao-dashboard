@@ -125,3 +125,14 @@
 - [ ] Atualizar status após envio bem-sucedido
 - [ ] Implementar retry em caso de falha
 - [ ] Testar job completo
+
+
+## Fase 18: Atualização de Templates PDF
+- [x] Extrair logos dos PDFs originais (IR360 e e-Restituição)
+- [x] Salvar logos como imagens PNG no projeto
+- [x] Atualizar geração da Planilha RT com logo IR360 e layout fiel
+- [x] Atualizar geração de Esclarecimentos com logos e layout fiel
+- [x] Testar PDFs gerados e comparar com originais
+- [x] Validar que todos os campos estão sendo preenchidos corretamente
+- [x] Corrigir logos para remover fundo preto (usar transparentes)
+- [x] Ajustar mapeamento de dados nos campos corretos

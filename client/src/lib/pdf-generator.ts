@@ -1,6 +1,5 @@
 import jsPDF from "jspdf";
-import html2canvas from "html2canvas";
-import { formatCurrency, formatDate } from "./format";
+import { formatCurrency } from "./format";
 
 export interface IrpfFormData {
   id: number;
@@ -35,7 +34,8 @@ export interface IrpfFormData {
 }
 
 /**
- * Gerar PDF do Demonstrativo de Apuração (Template 1)
+ * Gerar PDF da Planilha RT (Demonstrativo de Apuração) - Template 1
+ * Segue fielmente o layout do template original com logo IR360 e tabelas
  */
 export async function generateDemonstratividePDF(form: IrpfFormData): Promise<void> {
   const doc = new jsPDF({
@@ -45,160 +45,211 @@ export async function generateDemonstratividePDF(form: IrpfFormData): Promise<vo
   });
 
   const pageWidth = doc.internal.pageSize.getWidth();
-  const pageHeight = doc.internal.pageSize.getHeight();
   const margin = 15;
-  const contentWidth = pageWidth - 2 * margin;
-  let yPos = margin;
+  let yPos = 15;
 
-  // Configurar fonte
-  doc.setFont("Helvetica", "normal");
-  doc.setFontSize(10);
+  // Logo IR360 no topo
+  try {
+    const logoImg = new Image();
+    logoImg.src = "/logos/logo-ir360-planilha.png";
+    await new Promise((resolve) => {
+      logoImg.onload = resolve;
+      logoImg.onerror = resolve; // Continuar mesmo se falhar
+    });
+    if (logoImg.complete) {
+      doc.addImage(logoImg, "PNG", (pageWidth - 60) / 2, yPos, 60, 21);
+    }
+  } catch (error) {
+    console.warn("Erro ao carregar logo:", error);
+  }
 
-  // Título
-  doc.setFontSize(14);
+  yPos += 28;
+
+  // Tabela de cabeçalho (verde claro)
+  doc.setFillColor(200, 230, 201); // Verde claro
+  doc.rect(margin, yPos, pageWidth - 2 * margin, 14, "F");
+  doc.setDrawColor(0);
+  doc.rect(margin, yPos, pageWidth - 2 * margin, 14, "S");
+
+  // Dividir em 3 colunas
+  const col1Width = (pageWidth - 2 * margin) * 0.6;
+  const col2Width = (pageWidth - 2 * margin) * 0.2;
+  const col3Width = (pageWidth - 2 * margin) * 0.2;
+
+  doc.line(margin + col1Width, yPos, margin + col1Width, yPos + 14);
+  doc.line(margin + col1Width + col2Width, yPos, margin + col1Width + col2Width, yPos + 14);
+
   doc.setFont("Helvetica", "bold");
-  doc.text("DEMONSTRATIVO DE APURAÇÃO DAS VERBAS TRIBUTÁVEIS", margin, yPos);
-  doc.text("REFERENTES À RECLAMAÇÃO TRABALHISTA", margin, yPos + 6);
-  yPos += 15;
-
-  // Cabeçalho com DIRPF e ano
-  doc.setFontSize(10);
-  doc.setFont("Helvetica", "normal");
-  doc.text(`DIRPF ${new Date(form.createdAt).getFullYear()}`, pageWidth - margin - 40, yPos - 9);
-
-  // Seção: Dados do Contribuinte
-  doc.setFont("Helvetica", "bold");
-  doc.setFontSize(10);
-  doc.text("DADOS DO CONTRIBUINTE", margin, yPos);
-  yPos += 7;
-
-  // Tabela de dados pessoais
-  doc.setFont("Helvetica", "normal");
   doc.setFontSize(9);
-  const tableData = [
-    ["Nome do Cliente:", form.nomeCliente],
+  doc.text("DEMONSTRATIVO DE APURAÇÃO DAS VERBAS TRIBUTÁVEIS", margin + 2, yPos + 5);
+  doc.text("REFERENTES À RECLAMAÇÃO TRABALHISTA", margin + 2, yPos + 10);
+  doc.text("DIRPF", margin + col1Width + 5, yPos + 8);
+  doc.text(new Date(form.createdAt).getFullYear().toString(), margin + col1Width + col2Width + 5, yPos + 8);
+
+  yPos += 16;
+
+  // Seção: DADOS DO CONTRIBUINTE
+  doc.setFillColor(200, 230, 201);
+  doc.rect(margin, yPos, pageWidth - 2 * margin, 6, "F");
+  doc.rect(margin, yPos, pageWidth - 2 * margin, 6, "S");
+  doc.setFont("Helvetica", "bold");
+  doc.setFontSize(9);
+  doc.setTextColor(0, 0, 139); // Azul escuro
+  doc.text("DADOS DO CONTRIBUINTE", margin + 2, yPos + 4);
+  doc.setTextColor(0, 0, 0);
+  yPos += 6;
+
+  // Tabela de dados do contribuinte
+  const contribuinteData = [
+    ["Nome do Cliente:", form.nomeCliente.toUpperCase()],
     ["CPF:", form.cpf],
     ["Data de Nascimento:", form.dataNascimento],
   ];
 
-  tableData.forEach((row) => {
-    doc.text(row[0], margin + 2, yPos);
-    doc.text(row[1], margin + 50, yPos);
+  contribuinteData.forEach((row) => {
+    doc.rect(margin, yPos, pageWidth - 2 * margin, 6, "S");
+    doc.line(margin + 50, yPos, margin + 50, yPos + 6);
+    doc.setFont("Helvetica", "bold");
+    doc.setFontSize(8);
+    doc.text(row[0], margin + 2, yPos + 4);
+    doc.setFont("Helvetica", "normal");
+    doc.text(row[1], margin + 52, yPos + 4);
     yPos += 6;
   });
 
-  yPos += 3;
+  yPos += 2;
 
-  // Seção: Dados do Processo
+  // Seção: DADOS DO PROCESSO
+  doc.setFillColor(200, 230, 201);
+  doc.rect(margin, yPos, pageWidth - 2 * margin, 6, "F");
+  doc.rect(margin, yPos, pageWidth - 2 * margin, 6, "S");
   doc.setFont("Helvetica", "bold");
-  doc.setFontSize(10);
-  doc.text("DADOS DO PROCESSO", margin, yPos);
-  yPos += 7;
-
-  doc.setFont("Helvetica", "normal");
   doc.setFontSize(9);
-  const processData = [
-    ["Nº Processo:", form.numeroProcesso],
+  doc.setTextColor(0, 0, 139);
+  doc.text("DADOS DO PROCESSO", margin + 2, yPos + 4);
+  doc.setTextColor(0, 0, 0);
+  yPos += 6;
+
+  // Tabela de dados do processo
+  const processoData = [
+    ["Nº Processo", form.numeroProcesso],
     ["Comarca:", form.comarca],
     ["Vara:", form.vara],
   ];
 
-  processData.forEach((row) => {
-    doc.text(row[0], margin + 2, yPos);
-    doc.text(row[1], margin + 50, yPos);
+  processoData.forEach((row) => {
+    doc.rect(margin, yPos, pageWidth - 2 * margin, 6, "S");
+    doc.line(margin + 50, yPos, margin + 50, yPos + 6);
+    doc.setFont("Helvetica", "bold");
+    doc.setFontSize(8);
+    doc.text(row[0], margin + 2, yPos + 4);
+    doc.setFont("Helvetica", "normal");
+    doc.text(row[1], margin + 52, yPos + 4);
     yPos += 6;
   });
 
-  yPos += 5;
+  yPos += 2;
 
-  // Seção: Valores Principais
-  doc.setFont("Helvetica", "bold");
-  doc.setFontSize(9);
-  doc.text("1 - TOTAL DE RENDIMENTOS RETIRADO PELO AUTOR:", margin, yPos);
-  doc.setFont("Helvetica", "normal");
-  doc.text(formatCurrency(form.alvaraValor), pageWidth - margin - 30, yPos);
-  yPos += 6;
-
-  doc.setFont("Helvetica", "bold");
-  doc.text("2 - TOTAL DE DARF PAGA:", margin, yPos);
-  doc.setFont("Helvetica", "normal");
-  doc.text(formatCurrency(form.darfValor), pageWidth - margin - 30, yPos);
-  yPos += 6;
-
-  doc.setFont("Helvetica", "bold");
-  doc.text("3 - TOTAL DA CAUSA:", margin, yPos);
-  doc.setFont("Helvetica", "normal");
+  // Valores principais (3 linhas)
+  // Item 1: Alvará (rendimentos retirados)
+  // Item 2: DARF pago
+  // Item 3: Total da causa = Alvará + DARF
   const totalCausa = form.alvaraValor + form.darfValor;
-  doc.text(formatCurrency(totalCausa), pageWidth - margin - 30, yPos);
-  yPos += 10;
+  const valoresPrincipais = [
+    ["1 - TOTAL DE RENDIMENTOS RETIRADO PELO AUTOR:", formatCurrency(form.alvaraValor)],
+    ["2 - TOTAL DE DARF PAGA:", formatCurrency(form.darfValor)],
+    ["3 - TOTAL DA CAUSA", formatCurrency(totalCausa)],
+  ];
 
-  // Seção: Apuração de Rendimentos
-  doc.setFont("Helvetica", "bold");
-  doc.setFontSize(10);
-  doc.text("APURAÇÃO DOS RENDIMENTOS ISENTOS DE TRIBUTAÇÃO", margin, yPos);
-  yPos += 7;
+  valoresPrincipais.forEach((row) => {
+    doc.rect(margin, yPos, pageWidth - 2 * margin, 6, "S");
+    doc.line(pageWidth - margin - 40, yPos, pageWidth - margin - 40, yPos + 6);
+    doc.setFont("Helvetica", "bold");
+    doc.setFontSize(8);
+    doc.text(row[0], margin + 2, yPos + 4);
+    doc.setFont("Helvetica", "normal");
+    doc.text(row[1], pageWidth - margin - 38, yPos + 4, { align: "right" });
+    yPos += 6;
+  });
 
+  yPos += 2;
+
+  // Seção: APURAÇÃO DOS RENDIMENTOS ISENTOS DE TRIBUTAÇÃO
+  doc.setFillColor(200, 230, 201);
+  doc.rect(margin, yPos, pageWidth - 2 * margin, 6, "F");
+  doc.rect(margin, yPos, pageWidth - 2 * margin, 6, "S");
   doc.setFont("Helvetica", "bold");
   doc.setFontSize(9);
+  doc.setTextColor(0, 0, 139);
+  doc.text("APURAÇÃO DOS RENDIMENTOS ISENTOS DE TRIBUTAÇÃO", margin + 2, yPos + 4);
+  doc.setTextColor(0, 0, 0);
+  yPos += 6;
+
+  // Seção de Apuração - Corrigir valores conforme template
+  const rendimentosIsentos = form.brutoHomologado - form.tributavelHomologado;
   const apuracaoData = [
-    ["4 - RENDIMENTOS BRUTO HOMOLOGADO/ATUALIZADO:", formatCurrency(form.brutoHomologado)],
-    ["5 - RENDIMENTOS TRIBUTÁVEIS CALCULADOS NA MESMA DATA BASE:", formatCurrency(form.tributavelHomologado)],
-    ["6 - PROPORÇÃO DE RENDIMENTOS TRIBUTÁVEIS:", form.proporcao],
-    ["7 - TOTAL DE RENDIMENTOS ISENTOS:", formatCurrency(form.brutoHomologado - form.tributavelHomologado)],
-    ["8 - RENDIMENTOS SUJEITOS À TRIBUTAÇÃO NORMAL:", formatCurrency(form.rendimentosTributavelAlvara)],
+    ["4 - RENDIMENTOS BRUTO HOMOLOGADO/ATUALIZADO", formatCurrency(form.brutoHomologado)],
+    ["5 - RENDIMENTOS TRIBUTÁVEIS CALCULADOS NA MESMA DATA BASE", formatCurrency(form.tributavelHomologado)],
+    ["6 - PROPORÇÃO DE RENDIMENTOS TRIBUTÁVEIS", form.proporcao],
+    ["7 - TOTAL DE RENDIMENTOS ISENTOS", formatCurrency(rendimentosIsentos)],
+    ["8 - RENDIMENTOS SUJEITOS À TRIBUTAÇÃO NORMAL", formatCurrency(form.rendimentosTributavelAlvara)],
     ["9 - TOTAL DE DESPESAS PAGAS COM ADVOGADO, PERITO E CUSTAS:", formatCurrency(form.honorariosValor)],
-    ["10 - PROPORÇÃO A DEDUZIR DE DESPESAS PAGAS:", formatCurrency(form.rendimentosTributavelHonorarios)],
+    ["10 - PROPORÇÃO A DEDUZIR DE DESPESAS PAGAS", formatCurrency(form.rendimentosTributavelHonorarios)],
   ];
 
   apuracaoData.forEach((row) => {
+    doc.rect(margin, yPos, pageWidth - 2 * margin, 6, "S");
+    doc.line(pageWidth - margin - 40, yPos, pageWidth - margin - 40, yPos + 6);
     doc.setFont("Helvetica", "bold");
-    doc.text(row[0], margin + 2, yPos);
+    doc.setFontSize(8);
+    doc.text(row[0], margin + 2, yPos + 4);
     doc.setFont("Helvetica", "normal");
-    doc.text(row[1], pageWidth - margin - 30, yPos);
+    doc.text(row[1], pageWidth - margin - 38, yPos + 4, { align: "right" });
     yPos += 6;
   });
 
-  yPos += 5;
+  yPos += 2;
 
-  // Seção: Valores Esperados da Declaração
-  doc.setFont("Helvetica", "bold");
-  doc.setFontSize(10);
-  doc.text("VALORES ESPERADOS DA DECLARAÇÃO DE AJUSTE ANUAL DO IR", margin, yPos);
-  yPos += 7;
-
+  // Seção: VALORES ESPERADOS DA DECLARAÇÃO DE AJUSTE ANUAL DO IR
+  doc.setFillColor(200, 230, 201);
+  doc.rect(margin, yPos, pageWidth - 2 * margin, 6, "F");
+  doc.rect(margin, yPos, pageWidth - 2 * margin, 6, "S");
   doc.setFont("Helvetica", "bold");
   doc.setFontSize(9);
+  doc.setTextColor(0, 0, 139);
+  doc.text("VALORES ESPERADOS DA DECLARAÇÃO DE AJUSTE ANUAL DO IR", margin + 2, yPos + 4);
+  doc.setTextColor(0, 0, 0);
+  yPos += 6;
+
   const declaracaoData = [
     ["11 - CNPJ:", form.cnpj],
     ["12 - FONTE PAGADORA:", form.fontePagadora],
-    ["13 - RENDIMENTOS TRIBUTÁVEIS:", formatCurrency(form.baseCalculo)],
+    ["13 - RENDIMENTOS TRIBUTÁVEIS", formatCurrency(form.baseCalculo)],
     ["14 - CONTRIBUIÇÃO PREVIDÊNCIA OFICIAL (INSS):", "R$ 0,00"],
-    ["15 - IMPOSTO DE RENDA RETIDO NA FONTE:", formatCurrency(form.darfValor)],
-    ["16 - MÊS DO RECEBIMENTO:", "DEZEMBRO"],
-    ["17 - MESES DISCUTIDOS NA AÇÃO:", `${form.numeroMeses},00`],
+    ["15 - IMPOSTO DE RENDA RETIDO NA FONTE", formatCurrency(form.darfValor)],
+    ["16 - MÊS DO RECEBIMENTO", "DEZEMBRO"],
+    ["17 - MESES DISCUTIDOS NA AÇÃO", `${form.numeroMeses},00`],
     ["18 - RENDIMENTOS ISENTOS E NÃO TRIBUTÁVEIS:", formatCurrency(form.brutoHomologado - form.tributavelHomologado)],
   ];
 
   declaracaoData.forEach((row) => {
+    doc.rect(margin, yPos, pageWidth - 2 * margin, 6, "S");
+    doc.line(pageWidth - margin - 40, yPos, pageWidth - margin - 40, yPos + 6);
     doc.setFont("Helvetica", "bold");
-    doc.text(row[0], margin + 2, yPos);
+    doc.setFontSize(8);
+    doc.text(row[0], margin + 2, yPos + 4);
     doc.setFont("Helvetica", "normal");
-    doc.text(row[1], pageWidth - margin - 30, yPos);
+    doc.text(row[1], pageWidth - margin - 38, yPos + 4, { align: "right" });
     yPos += 6;
-
-    // Quebra de página se necessário
-    if (yPos > pageHeight - margin - 10) {
-      doc.addPage();
-      yPos = margin;
-    }
   });
 
   // Salvar PDF
-  doc.save(`Demonstrativo_${form.nomeCliente.replace(/\s+/g, "_")}.pdf`);
+  doc.save(`Planilha-RT-${form.nomeCliente.replace(/\s+/g, "_")}.pdf`);
 }
 
 /**
- * Gerar PDF de Esclarecimentos ao Auditor (Template 2)
+ * Gerar PDF de Esclarecimentos ao Auditor - Template 2
+ * Segue fielmente o layout do template original com logos e formatação
  */
 export async function generateEsclarecimentosPDF(form: IrpfFormData): Promise<void> {
   const doc = new jsPDF({
@@ -209,122 +260,167 @@ export async function generateEsclarecimentosPDF(form: IrpfFormData): Promise<vo
 
   const pageWidth = doc.internal.pageSize.getWidth();
   const pageHeight = doc.internal.pageSize.getHeight();
-  const margin = 15;
-  let yPos = margin;
+  const margin = 20;
+  let yPos = 20;
 
-  // Configurar fonte
-  doc.setFont("Helvetica", "normal");
-  doc.setFontSize(10);
+  // Logo e-Restituição no topo
+  try {
+    const logoImg = new Image();
+    logoImg.src = "/logos/logo-e-restituicao-transparent.png";
+    await new Promise((resolve) => {
+      logoImg.onload = resolve;
+      logoImg.onerror = resolve;
+    });
+    if (logoImg.complete) {
+      doc.addImage(logoImg, "PNG", (pageWidth - 50) / 2, yPos, 50, 15);
+    }
+  } catch (error) {
+    console.warn("Erro ao carregar logo:", error);
+  }
+
+  yPos += 22;
+
+  // Linha horizontal
+  doc.setLineWidth(0.5);
+  doc.line(margin, yPos, pageWidth - margin, yPos);
+  yPos += 5;
 
   // Título
-  doc.setFontSize(12);
   doc.setFont("Helvetica", "bold");
-  doc.text("ESCLARECIMENTOS SOBRE OS RENDIMENTOS RECEBIDOS ACUMULADAMENTE", margin, yPos);
-  doc.text("AO SETOR DE MALHA FISCAL DA RECEITA FEDERAL DO BRASIL", margin, yPos + 6);
-  yPos += 15;
-
-  // Cabeçalho
   doc.setFontSize(10);
-  doc.setFont("Helvetica", "normal");
-  doc.text(`CONTRIBUINTE: ${form.nomeCliente}`, margin, yPos);
-  yPos += 6;
-  doc.text(`CPF: ${form.cpf}`, margin, yPos);
-  yPos += 6;
-  doc.text(`DATA DE NASCIMENTO: ${form.dataNascimento}`, margin, yPos);
-  yPos += 6;
-  doc.text(`DIRPF ${new Date(form.createdAt).getFullYear()}`, margin, yPos);
+  const titulo1 = "ESCLARECIMENTOS SOBRE OS RENDIMENTOS RECEBIDOS ACUMULADAMENTE AO SETOR DE";
+  const titulo2 = "MALHA FISCAL DA RECEITA FEDERAL DO BRASIL";
+  doc.text(titulo1, pageWidth / 2, yPos, { align: "center" });
+  yPos += 5;
+  doc.text(titulo2, pageWidth / 2, yPos, { align: "center" });
   yPos += 10;
+
+  // Dados do contribuinte
+  doc.setFont("Helvetica", "bold");
+  doc.setFontSize(9);
+  doc.text(`CONTRIBUINTE: ${form.nomeCliente.toUpperCase()}`, margin, yPos);
+  doc.text(`DIRPF ${new Date(form.createdAt).getFullYear()}`, pageWidth - margin - 30, yPos);
+  yPos += 5;
+  doc.text(`CPF: ${form.cpf}`, margin, yPos);
+  yPos += 5;
+  doc.text(`DATA DE NASCIMENTO: ${form.dataNascimento}`, margin, yPos);
+  yPos += 8;
 
   // Seção A
   doc.setFont("Helvetica", "bold");
-  doc.setFontSize(10);
+  doc.setFontSize(9);
   doc.text("A) DADOS DA AÇÃO:", margin, yPos);
-  yPos += 7;
+  yPos += 5;
 
   doc.setFont("Helvetica", "normal");
   doc.setFontSize(9);
-  const aText = `Os valores declarados se referem a rendimento recebido de forma acumulada, referente a Ação Judicial Trabalhista, processo n.º ${form.numeroProcesso} que tramitou perante a ${form.vara} de ${form.comarca}.`;
-  const aLines = doc.splitTextToSize(aText, pageWidth - 2 * margin);
-  doc.text(aLines, margin, yPos);
-  yPos += aLines.length * 5 + 5;
+  const textoA = `Os valores declarados se referem a rendimento recebido de forma acumulada, referente a Ação Judicial Trabalhista, processo n.º ${form.numeroProcesso} que tramitou perante a ${form.vara} de ${form.comarca}.`;
+  const linhasA = doc.splitTextToSize(textoA, pageWidth - 2 * margin);
+  doc.text(linhasA, margin, yPos);
+  yPos += linhasA.length * 5 + 5;
 
   // Seção B
   doc.setFont("Helvetica", "bold");
-  doc.setFontSize(10);
+  doc.setFontSize(9);
   doc.text("B) VALORES E DATAS:", margin, yPos);
-  yPos += 7;
+  yPos += 5;
 
   doc.setFont("Helvetica", "normal");
   doc.setFontSize(9);
-  const bText = `2) O valor total levantado pelo(a) contribuinte, referente ao exercício foi de ${formatCurrency(form.brutoHomologado)};
+  const totalBruto = form.alvaraValor + form.darfValor;
+  
+  const textoB = `2) O valor total levantado pelo(a) contribuinte, referente ao exercício foi de ${formatCurrency(totalBruto)};
 
 3) O imposto de renda no valor total de ${formatCurrency(form.darfValor)}, foi retido pela Reclamada ${form.fontePagadora} - CNPJ n.º ${form.cnpj}, conforme documento(s) anexo(s);
 
-4) O valor bruto da ação corresponde a soma entre o(s) alvará(s)/mandado(s) de levantamento e o imposto de renda retido, o que equivale, neste caso, ao valor de ${formatCurrency(form.alvaraValor + form.darfValor)} (item 3, da planilha);
+4) O valor bruto da ação corresponde a soma entre o(s) alvará(s)/mandado(s) de levantamento e o imposto de renda retido, o que equivale, neste caso, ao valor de ${formatCurrency(totalBruto)} (Item 3, da planilha);
 
-5) O valor atualizado apurado de ${formatCurrency(form.rendimentosTributavelAlvara)} (item 8, da planilha), referente ao(s) Rendimento(s) Tributável(is), equivale(m) a ${form.proporcao} do valor bruto da ação (item 3), conforme apurado em planilha anexa;
+5) O valor atualizado apurado de ${formatCurrency(form.rendimentosTributavelAlvara)} (Item 8, da planilha), referente ao(s) Rendimento(s) Tributável(is), equivale(m) a ${form.proporcao} do valor bruto da ação (Item 3), conforme apurado em planilha anexa;
 
-6) O valor total apurado de despesas dedutiveis¹ com a ação judicial, sobre a mesma proporção dos rendimentos tributáveis, nos exatos termos da Lei, foi de ${formatCurrency(form.rendimentosTributavelHonorarios)}.`;
+6) O valor total apurado de despesas dedutíveis¹ com a ação judicial, sobre a mesma proporção dos rendimentos tributáveis, nos exatos termos da Lei, foi de ${formatCurrency(form.rendimentosTributavelHonorarios)}.`;
 
-  const bLines = doc.splitTextToSize(bText, pageWidth - 2 * margin);
-  doc.text(bLines, margin, yPos);
-  yPos += bLines.length * 4 + 10;
+  const linhasB = doc.splitTextToSize(textoB, pageWidth - 2 * margin);
+  doc.text(linhasB, margin, yPos);
+  yPos += linhasB.length * 4 + 8;
 
-  // Tabela de campos RRA
-  doc.setFont("Helvetica", "bold");
-  doc.setFontSize(10);
-  doc.text("CAMPOS E VALORES DECLARADOS NA FICHA DE RRA* DA DIRPF,", margin, yPos);
-  doc.text("NA OPÇÃO DE TRIBUTAÇÃO EXCLUSIVA NA FONTE", margin, yPos + 6);
-  yPos += 15;
-
-  // Desenhar tabela
+  // Tabela RRA
   doc.setFont("Helvetica", "bold");
   doc.setFontSize(9);
-  doc.text("A) RENDIMENTOS TRIBUTÁVEIS RECEBIDOS:", margin, yPos);
-  doc.text(formatCurrency(form.baseCalculo), pageWidth - margin - 30, yPos);
+  doc.text("CAMPOS E VALORES DECLARADOS NA FICHA DE RRA* DA DIRPF,", margin, yPos);
+  yPos += 5;
+  doc.text("NA OPÇÃO DE TRIBUTAÇÃO EXCLUSIVA NA FONTE", margin, yPos);
   yPos += 8;
 
-  doc.text("B) INSS RECLAMANTE:", margin, yPos);
-  doc.text("R$ 0,00", pageWidth - margin - 30, yPos);
-  yPos += 8;
+  // Tabela com bordas
+  const tabelaRRA = [
+    ["A) RENDIMENTOS TRIBUTÁVEIS RECEBIDOS:", formatCurrency(form.baseCalculo)],
+    ["B) INSS RECLAMANTE:", "R$ 0,00"],
+    ["C) IMPOSTO DE RENDA RETIDO NA FONTE:", formatCurrency(form.darfValor)],
+    ["D) Nº DE MESES DISCUTIDOS NA AÇÃO:", `${form.numeroMeses},00`],
+  ];
 
-  doc.text("C) IMPOSTO DE RENDA RETIDO NA FONTE:", margin, yPos);
-  doc.text(formatCurrency(form.darfValor), pageWidth - margin - 30, yPos);
-  yPos += 8;
+  tabelaRRA.forEach((row) => {
+    doc.rect(margin, yPos, pageWidth - 2 * margin, 7, "S");
+    doc.line(pageWidth - margin - 45, yPos, pageWidth - margin - 45, yPos + 7);
+    doc.setFont("Helvetica", "bold");
+    doc.setFontSize(8);
+    doc.text(row[0], margin + 2, yPos + 4.5);
+    doc.setFont("Helvetica", "normal");
+    doc.text(row[1], pageWidth - margin - 43, yPos + 4.5, { align: "right" });
+    yPos += 7;
+  });
 
-  doc.text("D) Nº DE MESES DISCUTIDOS NA AÇÃO:", margin, yPos);
-  doc.text(`${form.numeroMeses},00`, pageWidth - margin - 30, yPos);
-  yPos += 10;
+  yPos += 5;
 
   // Ficha de rendimentos isentos
   doc.setFont("Helvetica", "bold");
-  doc.setFontSize(10);
-  doc.text("FICHA DE RENDIMENTOS ISENTOS", margin, yPos);
-  yPos += 8;
-
-  doc.setFont("Helvetica", "bold");
   doc.setFontSize(9);
-  doc.text("RENDIMENTOS ISENTOS:", margin, yPos);
-  doc.text(formatCurrency(form.brutoHomologado - form.tributavelHomologado), pageWidth - margin - 30, yPos);
+  doc.text("FICHA DE RENDIMENTOS ISENTOS", margin, yPos);
+  yPos += 7;
+
+  doc.rect(margin, yPos, pageWidth - 2 * margin, 7, "S");
+  doc.line(pageWidth - margin - 45, yPos, pageWidth - margin - 45, yPos + 7);
+  doc.setFont("Helvetica", "bold");
+  doc.setFontSize(8);
+  doc.text("RENDIMENTOS ISENTOS:", margin + 2, yPos + 4.5);
+  doc.setFont("Helvetica", "normal");
+  const rendimentosIsentos = form.brutoHomologado - form.tributavelHomologado;
+  doc.text(formatCurrency(rendimentosIsentos), pageWidth - margin - 43, yPos + 4.5, { align: "right" });
   yPos += 10;
 
   // Observações
   doc.setFont("Helvetica", "bold");
-  doc.setFontSize(10);
+  doc.setFontSize(9);
   doc.text("Obs.:", margin, yPos);
-  yPos += 6;
+  yPos += 5;
 
   doc.setFont("Helvetica", "normal");
   doc.setFontSize(9);
-  const obsText = `a) Os honorários pagos, foram lançados na ficha de pagamentos, em item próprio;
+  const obsTexto = `a) Os honorários pagos, foram lançados na ficha de pagamentos, em item próprio;
 
 b) O valor referente ao rendimento isento foi lançado na ficha de rendimentos isentos e não tributáveis, no item "OUTROS", com a denominação de "Verbas Isentas Ação Judicial", com os mesmos dados da Fonte Pagadora.
 
 1 Art. 12.A, §2º da Lei 7.713/88`;
 
-  const obsLines = doc.splitTextToSize(obsText, pageWidth - 2 * margin);
-  doc.text(obsLines, margin, yPos);
+  const linhasObs = doc.splitTextToSize(obsTexto, pageWidth - 2 * margin);
+  doc.text(linhasObs, margin, yPos);
+  yPos += linhasObs.length * 4 + 10;
+
+  // Logo IR360 no rodapé
+  try {
+    const logoRodapeImg = new Image();
+    logoRodapeImg.src = "/logos/logo-ir360-transparent.png";
+    await new Promise((resolve) => {
+      logoRodapeImg.onload = resolve;
+      logoRodapeImg.onerror = resolve;
+    });
+    if (logoRodapeImg.complete) {
+      doc.addImage(logoRodapeImg, "PNG", (pageWidth - 40) / 2, pageHeight - 25, 40, 19);
+    }
+  } catch (error) {
+    console.warn("Erro ao carregar logo rodapé:", error);
+  }
 
   // Salvar PDF
-  doc.save(`Esclarecimentos_${form.nomeCliente.replace(/\s+/g, "_")}.pdf`);
+  doc.save(`Esclarecimentos-${form.nomeCliente.replace(/\s+/g, "_")}.pdf`);
 }
