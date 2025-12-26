@@ -216,6 +216,18 @@
 - [x] Testar CRUD de observações (13/13 testes passando)
 
 ## Fase 27: Ajustes Finais no Template Esclarecimentos
-- [ ] Revisar template comparando com documento perfeito
-- [ ] Ajustar espaçamentos e formatação restantes
-- [ ] Validar PDF final 100% idêntico
+- [x] Analisar documento Word original (0-EsclarecimentosJoseRamos.docx)
+- [x] Valores R$ em negrito nos itens 3-6 da seção B
+- [x] Indentação correta (número na margem, texto 12mm)
+- [x] Linha grossa ACIMA do logo IR360 (posição fixa)
+- [ ] **PENDENTE: Sublinhados em A), B) e NA OPÇÃO DE TRIBUTAÇÃO** - código aplicado mas não confirmado visualmente
+- [ ] Validar PDF final 100% idêntico ao documento perfeito
+
+## Fase 28: Preparação para Validação em Produção
+- [ ] Finalizar ajustes do template Esclarecimentos (sublinhados)
+- [ ] Restaurar valores originais de pagamento (R$ 5,99 e R$ 15,99)
+- [ ] Testar fluxo completo de pagamento com valores reais
+- [ ] Validar webhook ASAAS com pagamentos reais
+- [ ] Testar envio de emails com PDFs anexados
+- [ ] Publicar versão no Hostinger para validação
+- [ ] Realizar testes reais com formulários verdadeiros
