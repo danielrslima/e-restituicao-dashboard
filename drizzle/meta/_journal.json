@@ -29,6 +29,13 @@
       "when": 1766780971967,
       "tag": "0003_remarkable_kronos",
       "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "5",
+      "when": 1766790096585,
+      "tag": "0004_oval_cammi",
+      "breakpoints": true
     }
   ]
 }

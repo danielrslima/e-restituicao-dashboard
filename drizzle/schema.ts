@@ -83,3 +83,18 @@ export const irpfForms = mysqlTable("irpf_forms", {
 
 export type IrpfForm = typeof irpfForms.$inferSelect;
 export type InsertIrpfForm = typeof irpfForms.$inferInsert;
+
+/**
+ * Notas e observações internas sobre cada formulário
+ * Permite rastrear comunicações, problemas e informações adicionais
+ */
+export const notes = mysqlTable("notes", {
+  id: int("id").autoincrement().primaryKey(),
+  formId: int("form_id").notNull(),
+  conteudo: text("conteudo").notNull(),
+  criadoEm: timestamp("criado_em").defaultNow().notNull(),
+  atualizadoEm: timestamp("atualizado_em").defaultNow().onUpdateNow().notNull(),
+});
+
+export type Note = typeof notes.$inferSelect;
+export type InsertNote = typeof notes.$inferInsert;

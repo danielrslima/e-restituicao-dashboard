@@ -190,3 +190,32 @@
 - [x] Ajustar espessura das bordas das tabelas (0.5mm)
 - [x] Ajustar espaçamentos gerais entre seções
 - [ ] Testar e validar PDF final 100% idêntico
+
+
+## Fase 24: Sistema de Envio Automático de Emails
+- [x] Instalar biblioteca SendGrid
+- [x] Configurar API key do SendGrid
+- [x] Criar helper de envio de email com anexos
+- [x] Validar API key com testes (3/3 passando)
+- [ ] Implementar job diário que verifica formulários com dataEnvioKit chegada
+- [ ] Integrar com webhook ASAAS para disparar notificações
+
+## Fase 25: Painel de Estatísticas Financeiras
+- [x] Criar página de estatísticas no dashboard (Statistics.tsx)
+- [x] Adicionar cards com métricas (receita total, mensal, conversão)
+- [x] Implementar gráfico de evolução de vendas mensal
+- [x] Adicionar lista dos 10 maiores valores de restituição
+- [ ] Criar queries otimizadas para cálculos
+- [ ] Testar performance e validar números
+
+## Fase 26: Sistema de Notas/Observações
+- [x] Adicionar tabela 'notes' ao schema (formId, conteudo, timestamps)
+- [x] Criar página de notas (Notes.tsx)
+- [x] Implementar routers tRPC para CRUD de notas
+- [x] Criar interface para adicionar/editar notas
+- [x] Testar CRUD de observações (13/13 testes passando)
+
+## Fase 27: Ajustes Finais no Template Esclarecimentos
+- [ ] Revisar template comparando com documento perfeito
+- [ ] Ajustar espaçamentos e formatação restantes
+- [ ] Validar PDF final 100% idêntico

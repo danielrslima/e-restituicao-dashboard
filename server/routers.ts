@@ -4,7 +4,9 @@ import { systemRouter } from "./_core/systemRouter";
 import { publicProcedure, router, protectedProcedure } from "./_core/trpc";
 import { z } from "zod";
 import { TRPCError } from "@trpc/server";
-import { getAllIrpfForms, getIrpfFormById, updateKitIRStatus, syncFormularioFromFirebase } from "./db";
+import { getAllIrpfForms, getIrpfFormById, updateKitIRStatus, syncFormularioFromFirebase, getDb } from "./db";
+import { notes } from "../drizzle/schema";
+import { eq } from "drizzle-orm";
 
 // Admin-only procedure
 const adminProcedure = protectedProcedure.use(({ ctx, next }) => {
@@ -70,6 +72,69 @@ export const appRouter = router({
       )
       .mutation(async ({ input }) => {
         await syncFormularioFromFirebase(input.firebaseData);
+        return { success: true };
+      }),
+  }),
+
+  notes: router({
+    list: protectedProcedure
+      .input(z.object({ formId: z.number() }))
+      .query(async ({ input, ctx }) => {
+        if (ctx.user?.role !== 'admin') {
+          throw new TRPCError({ code: 'FORBIDDEN' });
+        }
+        if (input.formId === 0) return [];
+        const db = await getDb();
+        if (!db) return [];
+        const result = await db
+          .select()
+          .from(notes)
+          .where(eq(notes.formId, input.formId));
+        return result;
+      }),
+    create: protectedProcedure
+      .input(z.object({
+        formId: z.number(),
+        conteudo: z.string(),
+      }))
+      .mutation(async ({ input, ctx }) => {
+        if (ctx.user?.role !== 'admin') {
+          throw new TRPCError({ code: 'FORBIDDEN' });
+        }
+        const db = await getDb();
+        if (!db) throw new TRPCError({ code: 'INTERNAL_SERVER_ERROR' });
+        await db.insert(notes).values({
+          formId: input.formId,
+          conteudo: input.conteudo,
+        });
+        return { success: true };
+      }),
+    update: protectedProcedure
+      .input(z.object({
+        id: z.number(),
+        conteudo: z.string(),
+      }))
+      .mutation(async ({ input, ctx }) => {
+        if (ctx.user?.role !== 'admin') {
+          throw new TRPCError({ code: 'FORBIDDEN' });
+        }
+        const db = await getDb();
+        if (!db) throw new TRPCError({ code: 'INTERNAL_SERVER_ERROR' });
+        await db
+          .update(notes)
+          .set({ conteudo: input.conteudo })
+          .where(eq(notes.id, input.id));
+        return { success: true };
+      }),
+    delete: protectedProcedure
+      .input(z.object({ id: z.number() }))
+      .mutation(async ({ input, ctx }) => {
+        if (ctx.user?.role !== 'admin') {
+          throw new TRPCError({ code: 'FORBIDDEN' });
+        }
+        const db = await getDb();
+        if (!db) throw new TRPCError({ code: 'INTERNAL_SERVER_ERROR' });
+        await db.delete(notes).where(eq(notes.id, input.id));
         return { success: true };
       }),
   }),
