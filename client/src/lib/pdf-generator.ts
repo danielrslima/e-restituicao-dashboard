@@ -168,7 +168,7 @@ export async function generateDemonstratividePDF(form: IrpfFormData): Promise<vo
     doc.setFontSize(8);
     doc.text(row[0], margin + 2, yPos + 4);
     doc.setFont("Helvetica", "normal");
-    doc.text(row[1], pageWidth - margin - 38, yPos + 4, { align: "right" });
+    doc.text(row[1], pageWidth - margin - 3, yPos + 4, { align: "right" });
     yPos += 6;
   });
 
@@ -204,7 +204,7 @@ export async function generateDemonstratividePDF(form: IrpfFormData): Promise<vo
     doc.setFontSize(8);
     doc.text(row[0], margin + 2, yPos + 4);
     doc.setFont("Helvetica", "normal");
-    doc.text(row[1], pageWidth - margin - 38, yPos + 4, { align: "right" });
+    doc.text(row[1], pageWidth - margin - 3, yPos + 4, { align: "right" });
     yPos += 6;
   });
 
@@ -239,7 +239,7 @@ export async function generateDemonstratividePDF(form: IrpfFormData): Promise<vo
     doc.setFontSize(8);
     doc.text(row[0], margin + 2, yPos + 4);
     doc.setFont("Helvetica", "normal");
-    doc.text(row[1], pageWidth - margin - 38, yPos + 4, { align: "right" });
+    doc.text(row[1], pageWidth - margin - 3, yPos + 4, { align: "right" });
     yPos += 6;
   });
 
@@ -263,7 +263,7 @@ export async function generateEsclarecimentosPDF(form: IrpfFormData): Promise<vo
   const margin = 20;
   let yPos = 20;
 
-  // Logo e-Restituição no topo
+  // Logo e-Restituição no topo com texto
   try {
     const logoImg = new Image();
     logoImg.src = "/logos/logo-e-restituicao-transparent.png";
@@ -272,13 +272,20 @@ export async function generateEsclarecimentosPDF(form: IrpfFormData): Promise<vo
       logoImg.onerror = resolve;
     });
     if (logoImg.complete) {
-      doc.addImage(logoImg, "PNG", (pageWidth - 50) / 2, yPos, 50, 15);
+      // Logo verde à esquerda
+      doc.addImage(logoImg, "PNG", (pageWidth - 80) / 2, yPos, 15, 15);
+      // Texto "e-Restituição" em preto ao lado
+      doc.setFont("Helvetica", "bold");
+      doc.setFontSize(16);
+      doc.setTextColor(0, 0, 0);
+      doc.text("e-Restituição", (pageWidth - 80) / 2 + 18, yPos + 11);
     }
   } catch (error) {
     console.warn("Erro ao carregar logo:", error);
   }
 
   yPos += 22;
+  doc.setTextColor(0, 0, 0); // Reset para preto
 
   // Linha horizontal
   doc.setLineWidth(0.5);
@@ -314,9 +321,9 @@ export async function generateEsclarecimentosPDF(form: IrpfFormData): Promise<vo
 
   doc.setFont("Helvetica", "normal");
   doc.setFontSize(9);
-  const textoA = `Os valores declarados se referem a rendimento recebido de forma acumulada, referente a Ação Judicial Trabalhista, processo n.º ${form.numeroProcesso} que tramitou perante a ${form.vara} de ${form.comarca}.`;
+  const textoA = `1) Os valores declarados se referem a rendimento recebido de forma acumulada, referente a Ação Judicial Trabalhista, processo n.º ${form.numeroProcesso} que tramitou perante a ${form.vara} de ${form.comarca}.`;
   const linhasA = doc.splitTextToSize(textoA, pageWidth - 2 * margin);
-  doc.text(linhasA, margin, yPos);
+  doc.text(linhasA, margin, yPos, { align: "justify", maxWidth: pageWidth - 2 * margin });
   yPos += linhasA.length * 5 + 5;
 
   // Seção B
@@ -340,15 +347,17 @@ export async function generateEsclarecimentosPDF(form: IrpfFormData): Promise<vo
 6) O valor total apurado de despesas dedutíveis¹ com a ação judicial, sobre a mesma proporção dos rendimentos tributáveis, nos exatos termos da Lei, foi de ${formatCurrency(form.rendimentosTributavelHonorarios)}.`;
 
   const linhasB = doc.splitTextToSize(textoB, pageWidth - 2 * margin);
-  doc.text(linhasB, margin, yPos);
+  doc.text(linhasB, margin, yPos, { align: "justify", maxWidth: pageWidth - 2 * margin });
   yPos += linhasB.length * 4 + 8;
 
-  // Tabela RRA
+  // Título da tabela RRA (centralizado)
   doc.setFont("Helvetica", "bold");
   doc.setFontSize(9);
-  doc.text("CAMPOS E VALORES DECLARADOS NA FICHA DE RRA* DA DIRPF,", margin, yPos);
+  const titulo1RRA = "CAMPOS E VALORES DECLARADOS NA FICHA DE RRA* DA DIRPF,";
+  const titulo2RRA = "NA OPÇÃO DE TRIBUTAÇÃO EXCLUSIVA NA FONTE";
+  doc.text(titulo1RRA, margin, yPos);
   yPos += 5;
-  doc.text("NA OPÇÃO DE TRIBUTAÇÃO EXCLUSIVA NA FONTE", margin, yPos);
+  doc.text(titulo2RRA, margin, yPos);
   yPos += 8;
 
   // Tabela com bordas
@@ -366,7 +375,7 @@ export async function generateEsclarecimentosPDF(form: IrpfFormData): Promise<vo
     doc.setFontSize(8);
     doc.text(row[0], margin + 2, yPos + 4.5);
     doc.setFont("Helvetica", "normal");
-    doc.text(row[1], pageWidth - margin - 43, yPos + 4.5, { align: "right" });
+    doc.text(row[1], pageWidth - margin - 3, yPos + 4.5, { align: "right" });
     yPos += 7;
   });
 
@@ -385,7 +394,7 @@ export async function generateEsclarecimentosPDF(form: IrpfFormData): Promise<vo
   doc.text("RENDIMENTOS ISENTOS:", margin + 2, yPos + 4.5);
   doc.setFont("Helvetica", "normal");
   const rendimentosIsentos = form.brutoHomologado - form.tributavelHomologado;
-  doc.text(formatCurrency(rendimentosIsentos), pageWidth - margin - 43, yPos + 4.5, { align: "right" });
+  doc.text(formatCurrency(rendimentosIsentos), pageWidth - margin - 3, yPos + 4.5, { align: "right" });
   yPos += 10;
 
   // Observações
@@ -402,9 +411,9 @@ b) O valor referente ao rendimento isento foi lançado na ficha de rendimentos i
 
 1 Art. 12.A, §2º da Lei 7.713/88`;
 
-  const linhasObs = doc.splitTextToSize(obsTexto, pageWidth - 2 * margin);
-  doc.text(linhasObs, margin, yPos);
-  yPos += linhasObs.length * 4 + 10;
+  const obsLines = doc.splitTextToSize(obsTexto, pageWidth - 2 * margin);
+  doc.text(obsLines, margin, yPos, { align: "justify", maxWidth: pageWidth - 2 * margin });
+  yPos += obsLines.length * 4 + 10;
 
   // Logo IR360 no rodapé
   try {

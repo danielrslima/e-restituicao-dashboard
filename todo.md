@@ -136,3 +136,19 @@
 - [x] Validar que todos os campos estão sendo preenchidos corretamente
 - [x] Corrigir logos para remover fundo preto (usar transparentes)
 - [x] Ajustar mapeamento de dados nos campos corretos
+
+
+## Fase 19: Ajustes de Alinhamento nos PDFs
+- [ ] Corrigir alinhamento de valores na Planilha RT (valores dentro das células)
+- [ ] Centralizar título "CAMPOS E VALORES DECLARADOS..." nos Esclarecimentos
+- [ ] Alinhar margem direita do título com a tabela abaixo
+- [ ] Testar PDFs novamente para validar alinhamentos
+
+
+## Fase 19: Correção de Alinhamento nos PDFs
+- [x] Ajustar valores na Planilha RT para ficarem dentro das células (não cortados)
+- [x] Ajustar valores nos Esclarecimentos para ficarem dentro das células
+- [x] Adicionar texto "e-Restituição" em preto ao lado do logo verde
+- [x] Aplicar justificação (align: justify) em todos os textos das seções A, B e Obs
+- [x] Reformatar seção A para começar com "1)"
+- [ ] Testar PDFs e validar que todos os valores estão visíveis e alinhados
