@@ -47,7 +47,7 @@ export function getFirestore() {
 export async function syncFormularioFromFirestore(formularioId: string) {
   try {
     const db = getFirestore();
-    const doc = await db.collection('formularios').doc(formularioId).get();
+    const doc = await db.collection('formularios-irpf').doc(formularioId).get();
 
     if (!doc.exists) {
       console.warn(`[Firebase] Formulário ${formularioId} não encontrado`);
@@ -72,7 +72,7 @@ export function listenToFormulariosChanges(
   try {
     const db = getFirestore();
     
-    const unsubscribe = db.collection('formularios').onSnapshot((snapshot) => {
+    const unsubscribe = db.collection('formularios-irpf').onSnapshot((snapshot) => {
       snapshot.docChanges().forEach((change) => {
         if (change.type === 'added' || change.type === 'modified') {
           const formularioId = change.doc.id;

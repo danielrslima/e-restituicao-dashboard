@@ -231,3 +231,14 @@
 - [ ] Testar envio de emails com PDFs anexados
 - [ ] Publicar versão no Hostinger para validação
 - [ ] Realizar testes reais com formulários verdadeiros
+
+## Fase 28: Preparação para Validação em Produção (ATUAL)
+- [x] Valores de pagamento já estão corretos (R$ 5,99 e R$ 15,99) - definidos no site
+- [x] Corrigir coleção Firebase de 'formularios' para 'formularios-irpf'
+- [x] Dashboard funcionando com 5 formulários de teste
+- [ ] **PROBLEMA:** Formulário preenchido em restituicaoia.com.br não aparece no dashboard
+- [ ] Validar geração de PDFs com formulários existentes
+- [ ] Preparar documentação para deploy no Hostinger
+- [ ] Criar checkpoint final para produção
+
+**NOTA:** O site restituicaoia.com.br pode estar salvando em coleção diferente ou com mapeamento incorreto
