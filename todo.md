@@ -219,3 +219,63 @@
 - [ ] Revisar template comparando com documento perfeito
 - [ ] Ajustar espaçamentos e formatação restantes
 - [ ] Validar PDF final 100% idêntico
+
+
+## Fase 28: Diagnóstico Integração Firebase
+- [x] Identificar que site salva em coleção 'users' (não 'formularios')
+- [x] Analisar estrutura de dados em 'users' vs 'formularios'
+- [x] Confirmar que 'users' tem estrutura incompleta (faltam 20+ campos)
+- [x] Documentar solução completa em PROXIMOS-PASSOS-COMPLETO.md
+
+## Fase 29: Modificar Site para Coletar Dados Completos (PRÓXIMO)
+- [ ] Abrir App.jsx do site restituicaoia.com.br
+- [ ] Localizar const newProcess (linha ~268)
+- [ ] Adicionar arrays de alvarás detalhados (valor + data)
+- [ ] Adicionar arrays de DARFs detalhados (valor + data)
+- [ ] Adicionar arrays de honorários detalhados (valor + ano)
+- [ ] Adicionar valores de entrada (brutoHomologado, tributavelHomologado, numeroMeses)
+- [ ] Adicionar cálculos intermediários (proporcao, RRA, irMensal, etc.)
+- [ ] Mudar coleção de 'users' para 'formularios'
+- [ ] Testar preenchimento de formulário no site
+- [ ] Validar que dados aparecem completos no dashboard
+- [ ] Gerar PDFs e confirmar que estão completos
+
+## Fase 30: Adicionar Funcionalidade de Edição no Dashboard (FUTURO)
+- [ ] Criar componente FormularioEditForm.tsx
+- [ ] Adicionar botão Editar em FormularioDetalhes.tsx
+- [ ] Criar modal de edição com todos os campos
+- [ ] Adicionar procedure formularios.update em routers.ts
+- [ ] Implementar updateFormularioInFirebase em firebase.ts
+- [ ] Testar edição de formulário existente
+
+## Fase 31: Deploy Final no Hostinger
+- [ ] Finalizar template Esclarecimentos (sublinhados)
+- [ ] Criar checkpoint final
+- [ ] Seguir guia DEPLOY-HOSTINGER.md
+- [ ] Configurar variáveis de ambiente
+- [ ] Testar com pagamentos reais
+- [ ] Validar webhook ASAAS
+- [ ] Validar envio automático de emails
+
+---
+
+## 📊 RESUMO DO STATUS ATUAL (26/12/2025)
+
+**✅ O QUE ESTÁ FUNCIONANDO:**
+- Dashboard conecta ao Firebase corretamente
+- Exibe formulários da coleção 'formularios' (5 de teste)
+- Gera PDFs perfeitamente (Planilha RT e Esclarecimentos) para formulários com dados completos
+- Integração ASAAS webhook configurada
+- Job de envio automático de email (7 dias após Kit IR)
+- Sistema de notas/observações (13/13 testes passando)
+
+**❌ O QUE PRECISA SER CORRIGIDO:**
+- Site restituicaoia.com.br salva em 'users' com estrutura incompleta
+- Faltam 20+ campos necessários para Planilha RT completa
+- Template Esclarecimentos precisa ajuste final (sublinhados)
+
+**📋 PRÓXIMA AÇÃO:**
+Modificar App.jsx do site conforme documento PROXIMOS-PASSOS-COMPLETO.md
+
+**🔄 COMANDO PARA RETOMAR:**
+"Retomar projeto e-Restituição Dashboard a partir do checkpoint 0129fb8e. Vamos implementar as modificações no site conforme documento PROXIMOS-PASSOS-COMPLETO.md para coletar todos os dados necessários."
