@@ -72,7 +72,8 @@ export function listenToFormulariosChanges(
   try {
     const db = getFirestore();
     
-    const unsubscribe = db.collection('formularios-irpf').onSnapshot((snapshot) => {
+    // Listener para coleção 'formularios' (formulários de teste)
+    const unsubscribe1 = db.collection('formularios').onSnapshot((snapshot) => {
       snapshot.docChanges().forEach((change) => {
         if (change.type === 'added' || change.type === 'modified') {
           const formularioId = change.doc.id;
@@ -82,8 +83,45 @@ export function listenToFormulariosChanges(
       });
     });
 
-    console.log('[Firebase] Listener de mudanças ativado');
-    return unsubscribe;
+    console.log('[Firebase] Listener de mudanças ativado para coleção formularios');
+    
+    // Listener para coleção 'users' (formulários do site)
+    const unsubscribe2 = db.collection('users').onSnapshot((snapshot) => {
+      snapshot.docChanges().forEach((change) => {
+        if (change.type === 'added' || change.type === 'modified') {
+          const formularioId = change.doc.id;
+          const rawData = change.doc.data();
+          
+          // Mapear estrutura aninhada para estrutura plana
+          const mappedData = {
+            nomeCompleto: rawData.dadosPessoais?.nomeCompleto,
+            email: rawData.dadosPessoais?.email,
+            telefone: rawData.dadosPessoais?.telefone,
+            cpf: rawData.dadosPessoais?.cpf,
+            dataNascimento: rawData.dadosPessoais?.dataNascimento,
+            numeroProcesso: rawData.dadosProcesso?.numeroProcesso,
+            comarca: rawData.dadosProcesso?.comarca,
+            vara: rawData.dadosProcesso?.vara,
+            fontePagadora: rawData.dadosProcesso?.fontePagadora,
+            irpfRestituir: rawData.calculos?.totalRestituir,
+            statusPagamento: rawData.pagamentoStarter?.status === 'CONFIRMED' ? 'pago' : 'pendente',
+            dataPagamento: rawData.pagamentoStarter?.dataConfirmacao,
+            tipoAcesso: 'Free',
+            createdAt: rawData.metadata?.criadoEm,
+          };
+          
+          callback(formularioId, mappedData);
+        }
+      });
+    });
+    
+    console.log('[Firebase] Listener de mudanças ativado para coleção users');
+    
+    // Retornar função para cancelar ambos os listeners
+    return () => {
+      unsubscribe1();
+      unsubscribe2();
+    };
   } catch (error) {
     console.error('[Firebase] Erro ao ativar listener:', error);
     return () => {};

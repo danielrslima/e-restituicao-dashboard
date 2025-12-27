@@ -242,3 +242,11 @@
 - [ ] Criar checkpoint final para produção
 
 **NOTA:** O site restituicaoia.com.br pode estar salvando em coleção diferente ou com mapeamento incorreto
+
+## Fase 29: Correção Integração Firebase do Site
+- [x] Analisar estrutura do Firebase (2 coleções: formularios e users)
+- [x] Identificar que site salva em coleção 'users' com estrutura aninhada
+- [x] Criar listeners para AMBAS as coleções (formularios + users)
+- [x] Mapear estrutura aninhada de 'users' para estrutura plana do dashboard
+- [x] Testar sincronização - formulário DANIEL LIMA apareceu no dashboard
+- [x] Validar que dados aparecem corretamente (6 formulários no total)
