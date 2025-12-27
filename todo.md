@@ -216,37 +216,6 @@
 - [x] Testar CRUD de observações (13/13 testes passando)
 
 ## Fase 27: Ajustes Finais no Template Esclarecimentos
-- [x] Analisar documento Word original (0-EsclarecimentosJoseRamos.docx)
-- [x] Valores R$ em negrito nos itens 3-6 da seção B
-- [x] Indentação correta (número na margem, texto 12mm)
-- [x] Linha grossa ACIMA do logo IR360 (posição fixa)
-- [ ] **PENDENTE: Sublinhados em A), B) e NA OPÇÃO DE TRIBUTAÇÃO** - código aplicado mas não confirmado visualmente
-- [ ] Validar PDF final 100% idêntico ao documento perfeito
-
-## Fase 28: Preparação para Validação em Produção
-- [ ] Finalizar ajustes do template Esclarecimentos (sublinhados)
-- [ ] Restaurar valores originais de pagamento (R$ 5,99 e R$ 15,99)
-- [ ] Testar fluxo completo de pagamento com valores reais
-- [ ] Validar webhook ASAAS com pagamentos reais
-- [ ] Testar envio de emails com PDFs anexados
-- [ ] Publicar versão no Hostinger para validação
-- [ ] Realizar testes reais com formulários verdadeiros
-
-## Fase 28: Preparação para Validação em Produção (ATUAL)
-- [x] Valores de pagamento já estão corretos (R$ 5,99 e R$ 15,99) - definidos no site
-- [x] Corrigir coleção Firebase de 'formularios' para 'formularios-irpf'
-- [x] Dashboard funcionando com 5 formulários de teste
-- [ ] **PROBLEMA:** Formulário preenchido em restituicaoia.com.br não aparece no dashboard
-- [ ] Validar geração de PDFs com formulários existentes
-- [ ] Preparar documentação para deploy no Hostinger
-- [ ] Criar checkpoint final para produção
-
-**NOTA:** O site restituicaoia.com.br pode estar salvando em coleção diferente ou com mapeamento incorreto
-
-## Fase 29: Correção Integração Firebase do Site
-- [x] Analisar estrutura do Firebase (2 coleções: formularios e users)
-- [x] Identificar que site salva em coleção 'users' com estrutura aninhada
-- [x] Criar listeners para AMBAS as coleções (formularios + users)
-- [x] Mapear estrutura aninhada de 'users' para estrutura plana do dashboard
-- [x] Testar sincronização - formulário DANIEL LIMA apareceu no dashboard
-- [x] Validar que dados aparecem corretamente (6 formulários no total)
+- [ ] Revisar template comparando com documento perfeito
+- [ ] Ajustar espaçamentos e formatação restantes
+- [ ] Validar PDF final 100% idêntico

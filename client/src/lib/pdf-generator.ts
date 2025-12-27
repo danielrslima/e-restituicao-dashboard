@@ -313,10 +313,10 @@ export async function generateEsclarecimentosPDF(form: IrpfFormData): Promise<vo
   doc.setFontSize(9);
   const tituloA = "A) DADOS DA AÇÃO:";
   doc.text(tituloA, margin, yPos);
-  // Adicionar sublinhado - linha mais grossa e posicionada corretamente
+  // Adicionar sublinhado
   const tituloAWidth = doc.getTextWidth(tituloA);
-  doc.setLineWidth(0.5);
-  doc.line(margin, yPos + 0.5, margin + tituloAWidth, yPos + 0.5);
+  doc.setLineWidth(0.3);
+  doc.line(margin, yPos + 1, margin + tituloAWidth, yPos + 1);
   yPos += 6;
 
   // Item 1) - número próximo à margem, texto com pequena indentação
@@ -333,10 +333,10 @@ export async function generateEsclarecimentosPDF(form: IrpfFormData): Promise<vo
   doc.setFontSize(9);
   const tituloB = "B) VALORES E DATAS:";
   doc.text(tituloB, margin, yPos);
-  // Adicionar sublinhado - linha mais grossa e posicionada corretamente
+  // Adicionar sublinhado
   const tituloBWidth = doc.getTextWidth(tituloB);
-  doc.setLineWidth(0.5);
-  doc.line(margin, yPos + 0.5, margin + tituloBWidth, yPos + 0.5);
+  doc.setLineWidth(0.3);
+  doc.line(margin, yPos + 1, margin + tituloBWidth, yPos + 1);
   yPos += 6;
 
   doc.setFont("Helvetica", "normal");
@@ -413,10 +413,10 @@ export async function generateEsclarecimentosPDF(form: IrpfFormData): Promise<vo
   doc.text(titulo1RRA, pageWidth / 2, yPos, { align: "center" });
   yPos += 5;
   doc.text(titulo2RRA, pageWidth / 2, yPos, { align: "center" });
-  // Adicionar sublinhado na segunda linha - linha mais grossa
+  // Adicionar sublinhado na segunda linha
   const titulo2RRAWidth = doc.getTextWidth(titulo2RRA);
-  doc.setLineWidth(0.5);
-  doc.line((pageWidth - titulo2RRAWidth) / 2, yPos + 0.5, (pageWidth + titulo2RRAWidth) / 2, yPos + 0.5);
+  doc.setLineWidth(0.3);
+  doc.line((pageWidth - titulo2RRAWidth) / 2, yPos + 1, (pageWidth + titulo2RRAWidth) / 2, yPos + 1);
   yPos += 8;
 
   // Tabela com bordas
@@ -485,8 +485,12 @@ b) O valor referente ao rendimento isento foi lançado na ficha de rendimentos i
   doc.text("1 Art. 12.A, §2º da Lei 7.713/88", margin, yPos);
   yPos += 12;
 
-  // Logo IR360 no rodapé (posição fixa)
-  const logoY = pageHeight - 25;
+  // Linha horizontal GROSSA (largura total) - ACIMA do logo IR360
+  doc.setLineWidth(1.5);
+  doc.line(margin, yPos, pageWidth - margin, yPos);
+  yPos += 8;
+
+  // Logo IR360 no rodapé
   try {
     const logoRodapeImg = new Image();
     logoRodapeImg.src = "/logos/logo-ir360-transparent.png";
@@ -495,15 +499,11 @@ b) O valor referente ao rendimento isento foi lançado na ficha de rendimentos i
       logoRodapeImg.onerror = resolve;
     });
     if (logoRodapeImg.complete) {
-      doc.addImage(logoRodapeImg, "PNG", (pageWidth - 40) / 2, logoY, 40, 19);
+      doc.addImage(logoRodapeImg, "PNG", (pageWidth - 40) / 2, pageHeight - 25, 40, 19);
     }
   } catch (error) {
     console.warn("Erro ao carregar logo rodapé:", error);
   }
-
-  // Linha horizontal GROSSA (largura total) - ACIMA do logo IR360
-  doc.setLineWidth(1.5);
-  doc.line(margin, logoY - 3, pageWidth - margin, logoY - 3);
 
   // Salvar PDF
   doc.save(`Esclarecimentos-${form.nomeCliente.replace(/\s+/g, "_")}.pdf`);
