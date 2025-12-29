@@ -397,3 +397,18 @@
 - [x] Testar visualização de Patricia Almeida Costa
 - [x] Testar tabelas de cálculos de Ana Carolina Ferreira
 - [x] Validar que edição foi deixada como placeholder (sem implementação)
+
+## Fase 42: Implementar Campo de Confirmação de Exclusão (29/12/2025)
+- [x] Adicionar campo de confirmação na página de visualização
+- [x] Implementar lógica de ativação do botão ao digitar "excluir"
+- [x] Implementar procedure irpf.delete no backend
+- [x] Testar deleção completa (confirmação + banco de dados)
+- [x] Restaurar formulário de Sidinei para validações futuras
+
+## Fase 43: Sincronização com Firebase via API REST (29/12/2025)
+- [x] Criar endpoint REST /api/formulario/receber para receber dados do site
+- [x] Implementar validação de campos obrigatórios
+- [x] Implementar inserção no banco de dados
+- [x] Testar endpoint com curl (sucesso!)
+- [x] Validar que formulário aparece no dashboard
+- [x] Confirmar que cálculos estão corretos (R$ 73.750,00)

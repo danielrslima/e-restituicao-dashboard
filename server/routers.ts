@@ -146,6 +146,86 @@ export const appRouter = router({
         
         return { success: true };
       }),
+    
+    receberFormularioDoSite: publicProcedure
+      .input(
+        z.object({
+          nomeCliente: z.string(),
+          cpf: z.string(),
+          dataNascimento: z.string(),
+          email: z.string(),
+          telefone: z.string().optional(),
+          numeroProcesso: z.string(),
+          vara: z.string(),
+          comarca: z.string(),
+          fontePagadora: z.string(),
+          cnpj: z.string(),
+          brutoHomologado: z.number(),
+          tributavelHomologado: z.number(),
+          numeroMeses: z.number(),
+          alvaraValor: z.number(),
+          alvaraData: z.string(),
+          darfValor: z.number(),
+          darfData: z.string(),
+          honorariosValor: z.number(),
+          honorariosAno: z.string(),
+          proporcao: z.string(),
+          rendimentosTributavelAlvara: z.number(),
+          rendimentosTributavelHonorarios: z.number(),
+          baseCalculo: z.number(),
+          rra: z.string(),
+          irMensal: z.string(),
+          irDevido: z.number(),
+          irpfRestituir: z.number(),
+          statusPagamento: z.enum(['pendente', 'pago', 'cancelado']).optional(),
+          categoria: z.enum(['free', 'starter', 'builder', 'specialist']).optional(),
+        })
+      )
+      .mutation(async ({ input }) => {
+        const db = await getDb();
+        if (!db) throw new TRPCError({ code: 'INTERNAL_SERVER_ERROR', message: 'Database not available' });
+        
+        const { irpfForms } = await import('../drizzle/schema');
+        
+        // Inserir novo formulário
+        await db.insert(irpfForms).values({
+          nomeCliente: input.nomeCliente,
+          cpf: input.cpf,
+          dataNascimento: input.dataNascimento,
+          email: input.email,
+          telefone: input.telefone || null,
+          numeroProcesso: input.numeroProcesso,
+          vara: input.vara,
+          comarca: input.comarca,
+          fontePagadora: input.fontePagadora,
+          cnpj: input.cnpj,
+          brutoHomologado: input.brutoHomologado,
+          tributavelHomologado: input.tributavelHomologado,
+          numeroMeses: input.numeroMeses,
+          alvaraValor: input.alvaraValor,
+          alvaraData: input.alvaraData,
+          darfValor: input.darfValor,
+          darfData: input.darfData,
+          honorariosValor: input.honorariosValor,
+          honorariosAno: input.honorariosAno,
+          proporcao: input.proporcao,
+          rendimentosTributavelAlvara: input.rendimentosTributavelAlvara,
+          rendimentosTributavelHonorarios: input.rendimentosTributavelHonorarios,
+          baseCalculo: input.baseCalculo,
+          rra: input.rra,
+          irMensal: input.irMensal,
+          irDevido: input.irDevido,
+          irpfRestituir: input.irpfRestituir,
+          statusPagamento: input.statusPagamento || 'pendente',
+          categoria: input.categoria || 'starter',
+          tipoAcesso: 'pago',
+        });
+        
+        return { 
+          success: true, 
+          message: 'Formulário recebido e salvo com sucesso'
+        };
+      }),
   }),
 
   notes: router({
