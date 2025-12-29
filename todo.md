@@ -412,3 +412,22 @@
 - [x] Testar endpoint com curl (sucesso!)
 - [x] Validar que formulário aparece no dashboard
 - [x] Confirmar que cálculos estão corretos (R$ 73.750,00)
+
+## Fase 44: Integrar Site restituicaoia.com.br com Dashboard (29/12/2025)
+- [ ] Acessar site restituicaoia.com.br e analisar código JavaScript
+- [ ] Identificar função que envia dados (atualmente para Firebase)
+- [ ] Modificar para enviar para endpoint /api/formulario/receber
+- [ ] Mapear todos os campos do formulário para o formato esperado
+- [ ] Testar preenchimento de formulário no site
+- [ ] Validar que dados aparecem no dashboard automaticamente
+- [ ] Confirmar que cálculos estão corretos
+
+
+## Fase 43: Resolver Integração Site → Dashboard (29/12/2025 - ATUAL)
+- [x] Configurar Firebase Storage Rules para permitir upload de PDFs
+- [ ] Diagnosticar por que dados não aparecem no dashboard após cálculo
+- [ ] Verificar logs do console do site (F12)
+- [ ] Verificar se POST está sendo feito para o endpoint /api/formulario/receber
+- [ ] Corrigir código do App.jsx se necessário
+- [ ] Testar integração completa
+- [ ] Validar dados no dashboard e Firebase
