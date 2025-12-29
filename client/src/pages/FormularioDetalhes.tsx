@@ -145,13 +145,6 @@ export default function FormularioDetalhes() {
               <div className="text-sm font-medium text-muted-foreground">Telefone</div>
               <div>{form.telefone || "N/A"}</div>
             </div>
-            <div>
-              <div className="text-sm font-medium text-muted-foreground">Cálculo Criado em</div>
-              <div>
-                <div>{new Date(form.createdAt).toLocaleDateString("pt-BR")}</div>
-                <div className="text-xs text-muted-foreground">{new Date(form.createdAt).toLocaleTimeString("pt-BR")}</div>
-              </div>
-            </div>
           </CardContent>
         </Card>
 
@@ -312,79 +305,6 @@ export default function FormularioDetalhes() {
           </CardContent>
         </Card>
       </div>
-
-      {/* Seção de Tabelas por Exercício (apenas ANOS DIFERENTES) */}
-      {form.anosdiferentes === 1 && form.exerciciosJson && (
-        <Card>
-          <CardHeader>
-            <CardTitle>Dados por Exercício Fiscal</CardTitle>
-            <CardDescription>Detalhamento de cálculos para cada exercício</CardDescription>
-          </CardHeader>
-          <CardContent>
-            {(() => {
-              try {
-                const exercicios = JSON.parse(form.exerciciosJson);
-                return (
-                  <div className="space-y-6">
-                    {exercicios.map((exercicio: any, idx: number) => (
-                      <div key={idx} className="p-4 border rounded-lg">
-                        <h3 className="font-bold text-lg mb-4">Exercício {exercicio.ano || exercicio.exercicio}</h3>
-                        <div className="grid grid-cols-2 md:grid-cols-3 gap-4 text-sm">
-                          {Object.entries(exercicio).map(([key, value]: [string, any]) => (
-                            <div key={key}>
-                              <div className="text-muted-foreground font-medium">{key}</div>
-                              <div className="font-semibold">{String(value)}</div>
-                            </div>
-                          ))}
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                );
-              } catch (e) {
-                return <div className="text-sm text-muted-foreground">Erro ao carregar dados dos exercícios</div>;
-              }
-            })()}
-          </CardContent>
-        </Card>
-      )}
-
-      {/* Seção de PDFs por Exercício (apenas ANOS DIFERENTES) */}
-      {form.anosdiferentes === 1 && form.pdfsJson && (
-        <Card>
-          <CardHeader>
-            <CardTitle>PDFs por Exercício Fiscal</CardTitle>
-            <CardDescription>Múltiplos exercícios detectados - PDFs gerados por ano</CardDescription>
-          </CardHeader>
-          <CardContent className="space-y-4">
-            {(() => {
-              try {
-                const pdfs = JSON.parse(form.pdfsJson);
-                return (
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    {pdfs.map((pdf: any, idx: number) => (
-                      <div key={idx} className="p-4 border rounded-lg hover:bg-gray-50 transition">
-                        <div className="text-sm font-medium text-muted-foreground mb-2">{pdf.nome}</div>
-                        <a
-                          href={pdf.url}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="inline-flex items-center gap-2 text-blue-600 hover:text-blue-800 font-medium"
-                        >
-                          <Download className="w-4 h-4" />
-                          Download PDF
-                        </a>
-                      </div>
-                    ))}
-                  </div>
-                );
-              } catch (e) {
-                return <div className="text-sm text-muted-foreground">Erro ao carregar PDFs</div>;
-              }
-            })()}
-          </CardContent>
-        </Card>
-      )}
 
       {/* Seção de Exclusão */}
       <Card className="border-red-200 bg-red-50">

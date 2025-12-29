@@ -80,10 +80,6 @@ export const irpfForms = mysqlTable("irpf_forms", {
   firebaseDocId: varchar("firebase_doc_id", { length: 100 }),
   pdfPlanilhaUrl: text("pdf_planilha_url"),
   pdfEsclarecimentosUrl: text("pdf_esclarecimentos_url"),
-  // Suporte para múltiplos exercícios fiscais
-  anosdiferentes: int("anos_diferentes").default(0).notNull(), // 0 = false, 1 = true
-  pdfsJson: text("pdfs_json"), // JSON array de {nome, url}
-  exerciciosJson: text("exercicios_json"), // JSON array de dados por exercício
   createdAt: timestamp("created_at").defaultNow().notNull(),
   updatedAt: timestamp("updated_at").defaultNow().onUpdateNow().notNull(),
 });

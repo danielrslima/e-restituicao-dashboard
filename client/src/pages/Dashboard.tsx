@@ -149,7 +149,7 @@ export default function Dashboard() {
                 <TableHead>Categoria</TableHead>
                 <TableHead>IRPF a Restituir</TableHead>
                 <TableHead>Status</TableHead>
-                <TableHead>Data/Hora</TableHead>
+                <TableHead>Data</TableHead>
                 <TableHead>Ações</TableHead>
               </TableRow>
             </TableHeader>
@@ -171,10 +171,7 @@ export default function Dashboard() {
                     {formatCurrency(form.irpfRestituir)}
                   </TableCell>
                   <TableCell>{getStatusBadge(form.statusPagamento)}</TableCell>
-                  <TableCell className="text-sm">
-                    <div>{new Date(form.createdAt).toLocaleDateString("pt-BR")}</div>
-                    <div className="text-xs text-muted-foreground">{new Date(form.createdAt).toLocaleTimeString("pt-BR")}</div>
-                  </TableCell>
+                  <TableCell>{new Date(form.createdAt).toLocaleDateString("pt-BR")}</TableCell>
                   <TableCell>
                     <div className="flex gap-2">
                       <Button
