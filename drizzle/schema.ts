@@ -65,6 +65,7 @@ export const irpfForms = mysqlTable("irpf_forms", {
   // Status e metadados
   statusPagamento: mysqlEnum("status_pagamento", ["pendente", "pago", "cancelado"]).default("pendente").notNull(),
   tipoAcesso: mysqlEnum("tipo_acesso", ["free", "pago"]).default("pago").notNull(),
+  categoria: mysqlEnum("categoria", ["free", "starter", "builder", "specialist"]).default("starter").notNull(),
   dataPagamento: timestamp("data_pagamento"),
   dataAgendamentoEmail: timestamp("data_agendamento_email"),
   statusEmail: mysqlEnum("status_email", ["pendente", "agendado", "enviado", "erro"]).default("pendente"),
@@ -77,6 +78,8 @@ export const irpfForms = mysqlTable("irpf_forms", {
   dataEnvioKit: timestamp("data_envio_kit"),
   statusEnvioKit: mysqlEnum("status_envio_kit", ["pendente", "agendado", "enviado", "erro"]).default("pendente"),
   firebaseDocId: varchar("firebase_doc_id", { length: 100 }),
+  pdfPlanilhaUrl: text("pdf_planilha_url"),
+  pdfEsclarecimentosUrl: text("pdf_esclarecimentos_url"),
   createdAt: timestamp("created_at").defaultNow().notNull(),
   updatedAt: timestamp("updated_at").defaultNow().onUpdateNow().notNull(),
 });

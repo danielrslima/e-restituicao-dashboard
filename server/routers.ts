@@ -74,6 +74,67 @@ export const appRouter = router({
         await syncFormularioFromFirebase(input.firebaseData);
         return { success: true };
       }),
+    update: adminProcedure
+      .input(
+        z.object({
+          id: z.number(),
+          data: z.object({
+            nomeCliente: z.string(),
+            cpf: z.string(),
+            dataNascimento: z.string(),
+            email: z.string(),
+            telefone: z.string().optional(),
+            numeroProcesso: z.string(),
+            vara: z.string(),
+            comarca: z.string(),
+            fontePagadora: z.string(),
+            cnpj: z.string(),
+            brutoHomologado: z.number(),
+            tributavelHomologado: z.number(),
+            numeroMeses: z.number(),
+            alvaraValor: z.number(),
+            alvaraData: z.string(),
+            darfValor: z.number(),
+            darfData: z.string(),
+            honorariosValor: z.number(),
+            honorariosAno: z.string(),
+            statusPagamento: z.enum(["pendente", "pago", "cancelado"]),
+            categoria: z.enum(["free", "starter", "builder", "specialist"]),
+          }),
+        })
+      )
+      .mutation(async ({ input }) => {
+        const db = await getDb();
+        if (!db) throw new TRPCError({ code: 'INTERNAL_SERVER_ERROR', message: 'Database not available' });
+        
+        const { irpfForms } = await import('../drizzle/schema');
+        
+        // Recalcular valores
+        const proporcao = ((input.data.tributavelHomologado / input.data.brutoHomologado) * 100).toFixed(4) + '%';
+        const rendimentosTributavelAlvara = Math.round(input.data.alvaraValor * (input.data.tributavelHomologado / input.data.brutoHomologado));
+        const rendimentosTributavelHonorarios = Math.round(input.data.honorariosValor * (input.data.tributavelHomologado / input.data.brutoHomologado));
+        const baseCalculo = rendimentosTributavelAlvara - rendimentosTributavelHonorarios;
+        const rra = (baseCalculo / input.data.numeroMeses / 100).toFixed(2);
+        const irMensal = (baseCalculo * 0.275 / input.data.numeroMeses / 100).toFixed(2);
+        const irDevido = Math.round(baseCalculo * 0.275);
+        const irpfRestituir = irDevido - input.data.darfValor;
+        
+        await db.update(irpfForms)
+          .set({
+            ...input.data,
+            proporcao,
+            rendimentosTributavelAlvara,
+            rendimentosTributavelHonorarios,
+            baseCalculo,
+            rra,
+            irMensal,
+            irDevido,
+            irpfRestituir,
+          })
+          .where(eq(irpfForms.id, input.id));
+        
+        return { success: true };
+      }),
   }),
 
   notes: router({

@@ -1,0 +1,1 @@
+ALTER TABLE `irpf_forms` ADD `categoria` enum('free','starter','builder','specialist') DEFAULT 'starter' NOT NULL;

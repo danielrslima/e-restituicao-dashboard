@@ -1,0 +1,52 @@
+{
+  "query": "SELECT id, nome_cliente, cpf, firebase_doc_id, created_at FROM irpf_forms ORDER BY id DESC LIMIT 10;",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway02.us-east-1.prod.aws.tidbcloud.com --port 4000 --user 38eD4Jgq6QqQ8RQ.53d415ed0601 --database PEhpLdk8FgLQupbR4KLnRK --execute SELECT id, nome_cliente, cpf, firebase_doc_id, created_at FROM irpf_forms ORDER BY id DESC LIMIT 10;",
+  "rows": [
+    {
+      "id": "30001",
+      "nome_cliente": "DANIEL LIMA",
+      "cpf": "003.003.987-86",
+      "firebase_doc_id": "QJrIDdDsWJA0EQngOgkb",
+      "created_at": "2025-12-27 00:54:51"
+    },
+    {
+      "id": "5",
+      "nome_cliente": "Patricia Almeida Costa",
+      "cpf": "159.753.486-00",
+      "firebase_doc_id": "o92sqA0wXHyZeDMA20kR",
+      "created_at": "2025-12-26 21:16:29"
+    },
+    {
+      "id": "4",
+      "nome_cliente": "Carlos Eduardo Souza",
+      "cpf": "321.654.987-00",
+      "firebase_doc_id": "fk5hNNlbvRb5k2IgLJ6u",
+      "created_at": "2025-12-26 21:16:29"
+    },
+    {
+      "id": "3",
+      "nome_cliente": "Ana Carolina Ferreira",
+      "cpf": "456.789.123-00",
+      "firebase_doc_id": "rcpsNIm4k8wAGfiDiAps",
+      "created_at": "2025-12-26 21:16:29"
+    },
+    {
+      "id": "2",
+      "nome_cliente": "João Pedro Oliveira",
+      "cpf": "987.654.321-00",
+      "firebase_doc_id": "il9hU4YXedByDB8KchdS",
+      "created_at": "2025-12-26 21:16:28"
+    },
+    {
+      "id": "1",
+      "nome_cliente": "Maria Silva Santos",
+      "cpf": "123.456.789-00",
+      "firebase_doc_id": "AVFMLyS6nkCtTT43b9zX",
+      "created_at": "2025-12-26 21:16:28"
+    }
+  ],
+  "messages": [],
+  "stdout": "id\tnome_cliente\tcpf\tfirebase_doc_id\tcreated_at\n30001\tDANIEL LIMA\t003.003.987-86\tQJrIDdDsWJA0EQngOgkb\t2025-12-27 00:54:51\n5\tPatricia Almeida Costa\t159.753.486-00\to92sqA0wXHyZeDMA20kR\t2025-12-26 21:16:29\n4\tCarlos Eduardo Souza\t321.654.987-00\tfk5hNNlbvRb5k2IgLJ6u\t2025-12-26 21:16:29\n3\tAna Carolina Ferreira\t456.789.123-00\trcpsNIm4k8wAGfiDiAps\t2025-12-26 21:16:29\n2\tJoão Pedro Oliveira\t987.654.321-00\til9hU4YXedByDB8KchdS\t2025-12-26 21:16:28\n1\tMaria Silva Santos\t123.456.789-00\tAVFMLyS6nkCtTT43b9zX\t2025-12-26 21:16:28\n",
+  "stderr": "",
+  "execution_time_ms": 57
+}

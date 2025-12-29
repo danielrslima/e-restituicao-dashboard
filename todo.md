@@ -274,8 +274,62 @@
 - Faltam 20+ campos necessários para Planilha RT completa
 - Template Esclarecimentos precisa ajuste final (sublinhados)
 
-**📋 PRÓXIMA AÇÃO:**
-Modificar App.jsx do site conforme documento PROXIMOS-PASSOS-COMPLETO.md
+**📝 PRÓXIMA AÇÃO:**
+1. Corrigir Dashboard para ler dados da coleção 'formularios' do Firebase (atualmente mostra dados mockados)
+2. Verificar se o teste "TESTE MANUS 28DEZ" aparece após correção
 
 **🔄 COMANDO PARA RETOMAR:**
 "Retomar projeto e-Restituição Dashboard a partir do checkpoint 0129fb8e. Vamos implementar as modificações no site conforme documento PROXIMOS-PASSOS-COMPLETO.md para coletar todos os dados necessários."
+
+
+## Fase 32: Implementar Funcionalidades do Protótipo Original
+- [x] Adicionar ícone de Grade (Tabela) na coluna Ações
+- [x] Adicionar ícone de Lápis (Editar) na coluna Ações  
+- [x] Adicionar ícone de Lixo (Deletar) na coluna Ações
+- [x] Página de visualização já existe (/formulario/:id)
+- [x] Adicionar Abas por Categoria (Free, Starter, Builder, Specialist)
+- [x] Filtrar dados por categoria nas abas
+- [x] Adicionar coluna Categoria na tabela
+- [x] Adicionar campo categoria no schema e executar migração
+
+## Fase 33: Página de Tabela com 3 Tabelas
+- [x] Criar página `/tabela/:id`
+- [x] Implementar Tabela 1: RESUMO - PROPORÇÃO
+- [x] Implementar Tabela 2: BASE DE CALCULO IRPF - SELIC
+- [x] Implementar Tabela 3: PREENCHIMENTO + DEFLAÇÃO + RENDIMENTOS
+- [x] Adicionar formatação de valores
+- [x] Adicionar scroll horizontal em mobile
+- [x] Adicionar rota no App.tsx
+- [x] Criar card de informações do processo
+
+## Fase 34: Formulário de Edição Completo
+- [x] Criar formulário de edição com todos os campos
+- [x] Validar campos obrigatórios
+- [x] Salvar alterações no banco
+- [ ] Atualizar Firebase após edição
+- [x] Atualizar UI após salvar
+- [x] Adicionar procedure update no routers.ts
+- [x] Recalcular valores automaticamente após edição
+- [x] Adicionar rota /editar/:id no App.tsx
+
+## Fase 35: Sistema de Download de PDFs (Simplificado)
+- [x] Campos pdfPlanilhaUrl e pdfEsclarecimentosUrl adicionados ao schema
+- [x] Migração executada com sucesso
+- [x] Função uploadPDFToStorage criada no firebase.ts
+- [x] Sistema de download direto já funciona no client (pdf-generator.ts)
+- [x] Decisão: Manter download direto (client-side) ao invés de upload para Firebase Storage
+- [x] PDFs são gerados no navegador e baixados diretamente pelo usuário
+
+## Fase 36: Testes Finais e Validação
+- [ ] Testar geração e upload de PDFs
+- [ ] Testar sincronização Firebase
+- [ ] Testar cálculos IRPF com múltiplos anos
+- [ ] Testar edição e deleção
+- [ ] Validar com dados reais do protótipo
+- [ ] Criar checkpoint final
+
+## Fase 37: Ajuste de Valores das Categorias
+- [x] Atualizar valores no Dashboard.tsx (abas)
+- [x] Atualizar valores no Dashboard.tsx (badge na tabela)
+- [x] Atualizar valores no FormularioEditar.tsx (select)
+- [x] Valores corretos aplicados: Free (R$ 0), Starter (R$ 5,99), Builder (R$ 15,99), Specialist (Negociado)

@@ -89,3 +89,37 @@ export function listenToFormulariosChanges(
     return () => {};
   }
 }
+
+/**
+ * Faz upload de um PDF para o Firebase Storage
+ * @param pdfBuffer - Buffer do PDF
+ * @param fileName - Nome do arquivo (ex: "planilha_123.pdf")
+ * @returns URL pública do arquivo
+ */
+export async function uploadPDFToStorage(pdfBuffer: Buffer, fileName: string): Promise<string> {
+  try {
+    const app = initializeFirebase();
+    if (!app) {
+      throw new Error('Firebase not initialized');
+    }
+
+    const bucket = admin.storage().bucket('erestituicao-ffa5c.firebasestorage.app');
+    const file = bucket.file(`pdfs/${fileName}`);
+
+    await file.save(pdfBuffer, {
+      metadata: {
+        contentType: 'application/pdf',
+      },
+      public: true,
+    });
+
+    // Gerar URL pública
+    const publicUrl = `https://storage.googleapis.com/${bucket.name}/pdfs/${fileName}`;
+    
+    console.log(`[Firebase Storage] PDF uploaded: ${fileName}`);
+    return publicUrl;
+  } catch (error) {
+    console.error(`[Firebase Storage] Erro ao fazer upload do PDF ${fileName}:`, error);
+    throw error;
+  }
+}

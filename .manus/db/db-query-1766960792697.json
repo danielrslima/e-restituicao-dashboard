@@ -1,0 +1,40 @@
+{
+  "query": "SELECT id, nome_cliente, cpf, status_pagamento FROM irpf_forms ORDER BY created_at DESC;",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway02.us-east-1.prod.aws.tidbcloud.com --port 4000 --user 38eD4Jgq6QqQ8RQ.53d415ed0601 --database PEhpLdk8FgLQupbR4KLnRK --execute SELECT id, nome_cliente, cpf, status_pagamento FROM irpf_forms ORDER BY created_at DESC;",
+  "rows": [
+    {
+      "id": "60004",
+      "nome_cliente": "Patricia Almeida Costa",
+      "cpf": "159.753.486-00",
+      "status_pagamento": "pago"
+    },
+    {
+      "id": "60005",
+      "nome_cliente": "Ana Carolina Ferreira",
+      "cpf": "456.789.123-00",
+      "status_pagamento": "pago"
+    },
+    {
+      "id": "60001",
+      "nome_cliente": "Maria Silva Santos",
+      "cpf": "123.456.789-00",
+      "status_pagamento": "pago"
+    },
+    {
+      "id": "60002",
+      "nome_cliente": "Carlos Eduardo Souza",
+      "cpf": "321.654.987-00",
+      "status_pagamento": "pendente"
+    },
+    {
+      "id": "60003",
+      "nome_cliente": "João Pedro Oliveira",
+      "cpf": "987.654.321-00",
+      "status_pagamento": "pago"
+    }
+  ],
+  "messages": [],
+  "stdout": "id\tnome_cliente\tcpf\tstatus_pagamento\n60004\tPatricia Almeida Costa\t159.753.486-00\tpago\n60005\tAna Carolina Ferreira\t456.789.123-00\tpago\n60001\tMaria Silva Santos\t123.456.789-00\tpago\n60002\tCarlos Eduardo Souza\t321.654.987-00\tpendente\n60003\tJoão Pedro Oliveira\t987.654.321-00\tpago\n",
+  "stderr": "",
+  "execution_time_ms": 54
+}

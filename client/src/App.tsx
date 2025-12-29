@@ -7,6 +7,8 @@ import { ThemeProvider } from "./contexts/ThemeContext";
 import Home from "./pages/Home";
 import Dashboard from "./pages/Dashboard";
 import FormularioDetalhes from "./pages/FormularioDetalhes";
+import TabelaDetalhes from "./pages/TabelaDetalhes";
+import FormularioEditar from "./pages/FormularioEditar";
 import DashboardLayout from "./components/DashboardLayout";
 
 function Router() {
@@ -25,6 +27,20 @@ function Router() {
         {() => (
           <DashboardLayout>
             <FormularioDetalhes />
+          </DashboardLayout>
+        )}
+      </Route>
+      <Route path="/tabela/:id">
+        {() => (
+          <DashboardLayout>
+            <TabelaDetalhes />
+          </DashboardLayout>
+        )}
+      </Route>
+      <Route path="/editar/:id">
+        {() => (
+          <DashboardLayout>
+            <FormularioEditar />
           </DashboardLayout>
         )}
       </Route>

@@ -382,8 +382,12 @@ export async function syncFormularioFromFirebase(firebaseData: any) {
     return;
   }
 
+  console.log('[Firebase Sync] Iniciando sincronização:', firebaseData.id);
+  console.log('[Firebase Sync] Dados recebidos:', JSON.stringify(firebaseData, null, 2));
+
   try {
     // Mapear dados do Firebase para o schema local
+    console.log('[Firebase Sync] Mapeando dados...');
     const formData = {
       // Dados pessoais
       nomeCliente: firebaseData.nomeCompleto || '',
@@ -447,6 +451,8 @@ export async function syncFormularioFromFirebase(firebaseData: any) {
       firebaseDocId: firebaseData.id || null,
     };
 
+    console.log('[Firebase Sync] Dados mapeados:', JSON.stringify(formData, null, 2));
+
     // Verificar se já existe no banco local
     const existing = await db
       .select()
@@ -468,5 +474,7 @@ export async function syncFormularioFromFirebase(firebaseData: any) {
     }
   } catch (error) {
     console.error("[Database] Erro ao sincronizar formulário do Firebase:", error);
+    console.error("[Database] Stack trace:", (error as Error).stack);
+    console.error("[Database] Dados que causaram erro:", JSON.stringify(firebaseData, null, 2));
   }
 }
