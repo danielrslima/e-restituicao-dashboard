@@ -50,24 +50,6 @@ async function startServer() {
   
   // Endpoint para receber formulários do site externo
   app.post("/api/formulario/receber", async (req, res) => {
-    // Adicionar CORS headers para permitir requisições do site
-    // Permitir múltiplas origens para desenvolvimento e produção
-    const allowedOrigins = ['https://restituicaoia.com.br', 'http://localhost:8080', 'http://127.0.0.1:8080'];
-    const origin = req.headers.origin;
-    if (origin && allowedOrigins.includes(origin)) {
-      res.setHeader('Access-Control-Allow-Origin', origin);
-    } else {
-      res.setHeader('Access-Control-Allow-Origin', 'https://restituicaoia.com.br');
-    }
-    res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
-    res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
-    
-    // Handle preflight request
-    if (req.method === 'OPTIONS') {
-      res.status(200).end();
-      return;
-    }
-    
     await handleFormularioExterno(req, res);
   });
   // OAuth callback under /api/oauth/callback

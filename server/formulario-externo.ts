@@ -46,11 +46,15 @@ export async function handleFormularioExterno(req: any, res: any) {
     
     console.log('[Formulário Externo] Recebido:', payload.nomeCliente);
 
-    // Validar campos obrigatórios (apenas campos essenciais)
+    // Validar campos obrigatórios
     const camposObrigatorios = [
       'nomeCliente', 'cpf', 'dataNascimento', 'email',
       'numeroProcesso', 'vara', 'comarca', 'fontePagadora', 'cnpj',
-      'brutoHomologado', 'tributavelHomologado', 'numeroMeses'
+      'brutoHomologado', 'tributavelHomologado', 'numeroMeses',
+      'alvaraValor', 'alvaraData', 'darfValor', 'darfData',
+      'honorariosValor', 'honorariosAno', 'proporcao',
+      'rendimentosTributavelAlvara', 'rendimentosTributavelHonorarios',
+      'baseCalculo', 'rra', 'irMensal', 'irDevido', 'irpfRestituir'
     ];
 
     for (const campo of camposObrigatorios) {
@@ -87,20 +91,20 @@ export async function handleFormularioExterno(req: any, res: any) {
       brutoHomologado: payload.brutoHomologado,
       tributavelHomologado: payload.tributavelHomologado,
       numeroMeses: payload.numeroMeses,
-      alvaraValor: payload.alvaraValor || 0,
-      alvaraData: payload.alvaraData || '',
-      darfValor: payload.darfValor || 0,
-      darfData: payload.darfData || '',
-      honorariosValor: payload.honorariosValor || 0,
-      honorariosAno: payload.honorariosAno || '',
-      proporcao: payload.proporcao || '',
-      rendimentosTributavelAlvara: payload.rendimentosTributavelAlvara || 0,
-      rendimentosTributavelHonorarios: payload.rendimentosTributavelHonorarios || 0,
-      baseCalculo: payload.baseCalculo || 0,
-      rra: payload.rra || '',
-      irMensal: payload.irMensal || '',
-      irDevido: payload.irDevido || 0,
-      irpfRestituir: payload.irpfRestituir || 0,
+      alvaraValor: payload.alvaraValor,
+      alvaraData: payload.alvaraData,
+      darfValor: payload.darfValor,
+      darfData: payload.darfData,
+      honorariosValor: payload.honorariosValor,
+      honorariosAno: payload.honorariosAno,
+      proporcao: payload.proporcao,
+      rendimentosTributavelAlvara: payload.rendimentosTributavelAlvara,
+      rendimentosTributavelHonorarios: payload.rendimentosTributavelHonorarios,
+      baseCalculo: payload.baseCalculo,
+      rra: payload.rra,
+      irMensal: payload.irMensal,
+      irDevido: payload.irDevido,
+      irpfRestituir: payload.irpfRestituir,
       statusPagamento: payload.statusPagamento || 'pendente',
       categoria: payload.categoria || 'starter',
       tipoAcesso: 'pago',
