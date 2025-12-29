@@ -374,3 +374,14 @@
 - [x] Testar com Sidinei Alves de Oliveira (dados reais)
 - [x] Validar que TODOS os valores batem 100% com protótipo original
 - [x] Valores validados: R$ 1.244.597,26 (Rendimentos), R$ 679.722,79 (Honorários), R$ 2.413.377,80 (Isentos)
+
+## Fase 42: Testar Funcionalidades de Editar e Deletar (29/12/2025)
+- [ ] Testar edição de formulário (clicar no ícone ✏️)
+- [ ] Modificar valores e verificar se recalcula corretamente
+- [ ] Salvar e verificar se atualiza no dashboard
+- [ ] Implementar backend de deleção (procedure irpf.delete)
+- [ ] Testar deleção de formulário (clicar no ícone 🗑️)
+- [ ] Verificar se confirmação funciona
+- [ ] Verificar se remove do banco de dados
+- [ ] Validar que Firebase sincroniza após edição
+- [ ] Validar que Firebase sincroniza após deleção
