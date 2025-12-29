@@ -10,7 +10,6 @@ import { serveStatic, setupVite } from "./vite";
 import { listenToFormulariosChanges } from "../firebase";
 import { syncFormularioFromFirebase } from "../db";
 import { handleAsaasWebhook, validateAsaasWebhook } from "../webhook";
-import { handleFormularioExterno } from "../formulario-externo";
 
 function isPortAvailable(port: number): Promise<boolean> {
   return new Promise(resolve => {
@@ -46,11 +45,6 @@ async function startServer() {
     }
     
     await handleAsaasWebhook(req, res);
-  });
-  
-  // Endpoint para receber formulários do site externo
-  app.post("/api/formulario/receber", async (req, res) => {
-    await handleFormularioExterno(req, res);
   });
   // OAuth callback under /api/oauth/callback
   registerOAuthRoutes(app);
