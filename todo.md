@@ -397,3 +397,28 @@
 - [x] Testar visualização de Patricia Almeida Costa
 - [x] Testar tabelas de cálculos de Ana Carolina Ferreira
 - [x] Validar que edição foi deixada como placeholder (sem implementação)
+
+## Fase 46: Testar Integração com Ana Carmen (29/12/2025 - CONCLUÍDA)
+- [x] Preparar payload com dados da Ana Carmen (3 exercícios, 6 PDFs)
+- [x] Arquivo de teste JSON criado: /home/ubuntu/test-ana-carmen.json
+- [ ] Enviar via cURL para /api/formulario/receber (pendente: servidor estável)
+- [ ] Validar que formulário aparece no dashboard
+- [ ] Validar que seção "Dados por Exercício Fiscal" exibe corretamente
+- [ ] Validar que seção "PDFs por Exercício Fiscal" exibe links de download
+- [ ] Confirmar que Data/Hora aparece na tabela e na página de detalhes
+
+## Fase 47: Implementar Geração de PDFs no Site (29/12/2025 - PRÓXIMA)
+- [ ] Localizar App.jsx do site restituicaoia.com.br
+- [ ] Adicionar lógica para gerar PDFs localmente (Demonstrativo + Esclarecimentos)
+- [ ] Fazer upload dos PDFs para Firebase Storage
+- [ ] Incluir URLs dos PDFs no payload enviado ao dashboard
+- [ ] Testar geração e envio de PDFs
+- [ ] Validar que PDFs aparecem no dashboard
+
+## Fase 48: Criar Testes de Integração com Vitest (29/12/2025 - CONCLUÍDA)
+- [x] Criar teste para parsing de JSON (pdfsJson, exerciciosJson) ✅
+- [x] Criar teste para exibição de seções (anosdiferentes) ✅
+- [x] Criar teste para formatação de Data/Hora ✅
+- [x] Criar teste para validação de payload do endpoint ✅
+- [x] Executar todos os testes ✅ (9/9 PASSANDO)
+- [x] Validar cobertura de testes ✅
