@@ -333,3 +333,44 @@
 - [x] Atualizar valores no Dashboard.tsx (badge na tabela)
 - [x] Atualizar valores no FormularioEditar.tsx (select)
 - [x] Valores corretos aplicados: Free (R$ 0), Starter (R$ 5,99), Builder (R$ 15,99), Specialist (Negociado)
+
+
+## Fase 38: Definir Funcionalidade da Page 2 (FUTURO)
+- [ ] Decidir o que implementar na Page 2 do sidebar
+- [ ] Opções sugeridas:
+  - Gerenciamento de emails agendados (ver status, reenviar, cancelar)
+  - Estatísticas financeiras (receita, gráficos, conversão)
+  - Página de Notas/Observações (tabela notes já existe no banco)
+  - Configurações do sistema
+  - Histórico de pagamentos ASAAS
+  - Logs de sincronização Firebase
+- [ ] Implementar a funcionalidade escolhida
+- [ ] Atualizar nome no DashboardLayout
+
+**NOTA:** Por enquanto deixar como placeholder. Decidir depois do sistema validado.
+
+
+## Fase 39: Corrigir Página de Tabelas (TabelaDetalhes.tsx)
+- [x] Corrigir campo irpfRestituir ao invés de irDevido
+- [x] Usar valores corretos do Firebase na Tabela 2
+- [x] Usar valorIRPFRestituir do Firebase como VALOR ATUALIZADO
+- [ ] Testar com todos os formulários do dashboard
+- [ ] Validar que valores batem com dashboard principal
+
+
+## Fase 40: Criar Formulário Real (Sidinei)
+- [ ] Inserir dados do Sidinei no banco via SQL
+- [ ] Validar que valores aparecem corretamente no dashboard
+- [ ] Verificar página de tabelas (3 tabelas)
+- [ ] Comparar IRPF a Restituir com planilha RT
+- [ ] Validar geração de PDFs
+
+
+## Fase 41: Corrigir Fórmulas de Cálculo na TabelaDetalhes.tsx
+- [x] Corrigir RENDIMENTOS TRIBUTÁVEIS (Tabela 2) = Tributável ALVARÁ - Tributável Honorários
+- [x] Corrigir TRIBUTÁVEIS Honorários (Tabela 3) = Honorários Total × Proporção
+- [x] Corrigir ISENTOS (Tabela 3) = Bruto Homologado - Tributável Homologado
+- [x] Corrigir Proporção para usar precisão máxima (4 casas decimais)
+- [x] Testar com Sidinei Alves de Oliveira (dados reais)
+- [x] Validar que TODOS os valores batem 100% com protótipo original
+- [x] Valores validados: R$ 1.244.597,26 (Rendimentos), R$ 679.722,79 (Honorários), R$ 2.413.377,80 (Isentos)

@@ -27,10 +27,12 @@ export default function TabelaDetalhes() {
     );
   }
 
-  // Cálculo de SELIC (exemplo: 51.78% acumulado)
-  const taxaSelic = 51.78;
-  const valorOriginalIRPF = form.irDevido / 100; // Converter de centavos
-  const valorAtualizadoIRPF = valorOriginalIRPF * (1 + taxaSelic / 100);
+  // Valores de IRPF do Firebase (já calculados pela Planilha RT)
+  // Usar irpfRestituir se existir, senão usar irDevido como fallback
+  const valorIRPFRestituir = (form.irpfRestituir || form.irDevido) / 100;
+  const taxaSelic = 51.78; // Taxa SELIC acumulada (exemplo)
+  const valorOriginalIRPF = form.irDevido / 100;
+  const valorAtualizadoIRPF = valorIRPFRestituir; // Usar valor do Firebase
 
   // Valores em reais
   const alvaraValor = form.alvaraValor / 100;
@@ -47,9 +49,17 @@ export default function TabelaDetalhes() {
   const alvaraCorrigido = alvaraValor * indiceDeflacao;
   const darfCorrigido = darfValor * indiceDeflacao;
 
-  // Rendimentos
-  const rendimentosTributaveis = rendimentosTributavelAlvara + rendimentosTributavelHonorarios;
-  const rendimentosIsentos = alvaraValor - rendimentosTributaveis - honorariosValor;
+  // Proporção (calcular com precisão máxima)
+  const proporcao = tributavelHomologado / brutoHomologado;
+
+  // Rendimentos Tributáveis Honorários = Honorários × Proporção
+  const rendimentosTributaveisHonorarios = honorariosValor * proporcao;
+
+  // Rendimentos Tributáveis (Tabela 2) = Tributável ALVARÁ - Tributável Honorários
+  const rendimentosTributaveis = tributavelHomologado - rendimentosTributaveisHonorarios;
+
+  // Rendimentos Isentos = Bruto Homologado - Tributável Homologado
+  const rendimentosIsentos = brutoHomologado - tributavelHomologado;
 
   return (
     <div className="space-y-6">
@@ -180,9 +190,9 @@ export default function TabelaDetalhes() {
                   <TableCell className="text-right">{formatCurrency(alvaraCorrigido * 100)}</TableCell>
                   <TableCell className="text-right border-r">{formatCurrency(darfCorrigido * 100)}</TableCell>
                   <TableCell className="text-right font-semibold text-blue-600">
-                    {formatCurrency(rendimentosTributaveis * 100)}
+                    {formatCurrency(tributavelHomologado * 100)}
                   </TableCell>
-                  <TableCell className="text-right">{formatCurrency(honorariosValor * 100)}</TableCell>
+                  <TableCell className="text-right">{formatCurrency(rendimentosTributaveisHonorarios * 100)}</TableCell>
                   <TableCell className="text-right font-semibold text-green-600">
                     {formatCurrency(rendimentosIsentos * 100)}
                   </TableCell>
