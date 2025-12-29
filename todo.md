@@ -423,11 +423,39 @@
 - [ ] Confirmar que cálculos estão corretos
 
 
-## Fase 43: Resolver Integração Site → Dashboard (29/12/2025 - ATUAL)
+## Fase 43: Resolver Integração Site → Dashboard (29/12/2025)
 - [x] Configurar Firebase Storage Rules para permitir upload de PDFs
-- [ ] Diagnosticar por que dados não aparecem no dashboard após cálculo
-- [ ] Verificar logs do console do site (F12)
-- [ ] Verificar se POST está sendo feito para o endpoint /api/formulario/receber
-- [ ] Corrigir código do App.jsx se necessário
-- [ ] Testar integração completa
-- [ ] Validar dados no dashboard e Firebase
+- [x] Diagnosticar por que dados não aparecem no dashboard após cálculo
+- [x] Verificar logs do console do site (F12)
+- [x] Verificar se POST está sendo feito para o endpoint /api/formulario/receber
+- [x] Testar integração completa
+- [x] Validar dados no dashboard (Nome aparece, mas valores calculados zerados)
+
+## Fase 44: Corrigir Extração de Dados Calculados no Endpoint (29/12/2025 - CONCLUÍDA)
+- [x] Diagnosticar estrutura exata de dados enviada pelo site (newProcess object)
+- [x] Corrigir extração de arrays: alvaras[] (valor + data)
+- [x] Corrigir extração de arrays: darfs[] (valor + data)
+- [x] Corrigir extração de arrays: honorarios[] (valor + ano)
+- [x] Corrigir extração de valorCalculos (irpfRestituir, baseCalculo, irDevido, etc)
+- [x] Validar que todos os campos calculados aparecem no dashboard (teste cURL 100% sucesso)
+- [ ] Investigar por que site envia payload diferente do esperado
+- [ ] Testar com caso real completo (João Carlos Mendes) após correção do site
+
+## Fase 45: Implementar Sistema Correto de PDFs e Dados por Exercício (29/12/2025 - CONCLUÍDA)
+- [x] Modificar schema do banco para armazenar:
+  - [x] anosdiferentes (boolean)
+  - [x] pdfs[] (array de {nome, url})
+  - [x] exercicios[] (array de dados por exercício fiscal)
+- [x] Modificar endpoint para receber e salvar:
+  - [x] Flag anosdiferentes
+  - [x] Arrays de PDFs (6 para Ana Carmen: 3 Data + 3 Esc)
+  - [x] Dados de cada exercício (2022, 2023, 2025)
+- [x] Modificar interface do dashboard para:
+  - [x] Exibir seção "Dados por Exercício Fiscal" com dados (apenas ANOS DIFERENTES)
+  - [x] Exibir seção "PDFs por Exercício Fiscal" com links de download (apenas ANOS DIFERENTES)
+  - [x] Manter exibição simples para MESMO ANO
+- [x] Adicionar coluna Data/Hora no dashboard (data + hora de criação)
+- [x] Adicionar campo "Cálculo Criado em" na página de detalhes
+- [ ] Testar integração completa com dados da Ana Carmen (3 exercícios = 6 PDFs)
+- [ ] Validar que PDFs e tabelas aparecem corretamente no dashboard
+- [ ] Criar checkpoint final
