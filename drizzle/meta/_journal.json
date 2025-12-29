@@ -50,34 +50,6 @@
       "when": 1766975286109,
       "tag": "0006_gigantic_the_initiative",
       "breakpoints": true
-    },
-    {
-      "idx": 7,
-      "version": "5",
-      "when": 1767039387003,
-      "tag": "0007_wooden_hemingway",
-      "breakpoints": true
-    },
-    {
-      "idx": 8,
-      "version": "5",
-      "when": 1767039833808,
-      "tag": "0008_steady_dexter_bennett",
-      "breakpoints": true
-    },
-    {
-      "idx": 9,
-      "version": "5",
-      "when": 1767046155344,
-      "tag": "0009_slow_scarlet_spider",
-      "breakpoints": true
-    },
-    {
-      "idx": 10,
-      "version": "5",
-      "when": 1767047818895,
-      "tag": "0010_dazzling_ultimates",
-      "breakpoints": true
     }
   ]
 }
