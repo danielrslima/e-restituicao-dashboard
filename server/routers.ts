@@ -135,6 +135,17 @@ export const appRouter = router({
         
         return { success: true };
       }),
+    delete: adminProcedure
+      .input(z.object({ id: z.number() }))
+      .mutation(async ({ input }) => {
+        const db = await getDb();
+        if (!db) throw new TRPCError({ code: 'INTERNAL_SERVER_ERROR', message: 'Database not available' });
+        
+        const { irpfForms } = await import('../drizzle/schema');
+        await db.delete(irpfForms).where(eq(irpfForms.id, input.id));
+        
+        return { success: true };
+      }),
   }),
 
   notes: router({

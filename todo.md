@@ -385,3 +385,15 @@
 - [ ] Verificar se remove do banco de dados
 - [ ] Validar que Firebase sincroniza após edição
 - [ ] Validar que Firebase sincroniza após deleção
+
+## Fase 42: Implementar Campo de Confirmação de Deleção (29/12/2025)
+- [x] Adicionar imports (Input, Label, Trash2) no FormularioDetalhes.tsx
+- [x] Implementar estado para confirmação de deleção
+- [x] Adicionar procedure irpf.delete no backend (server/routers.ts)
+- [x] Implementar setor de exclusão com campo de confirmação
+- [x] Testar deleção de formulário (Sidinei Alves de Oliveira deletado com sucesso)
+- [x] Verificar se confirmação funciona (campo ativa botão apenas ao digitar "excluir")
+- [x] Verificar se remove do banco de dados (confirmado - lista reduzida de 6 para 5)
+- [x] Testar visualização de Patricia Almeida Costa
+- [x] Testar tabelas de cálculos de Ana Carolina Ferreira
+- [x] Validar que edição foi deixada como placeholder (sem implementação)

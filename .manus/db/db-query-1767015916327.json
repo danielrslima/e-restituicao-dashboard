@@ -1,0 +1,15 @@
+{
+  "query": "SELECT id, email, role FROM users WHERE email = 'danielrslima@gmail.com' LIMIT 1;",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway02.us-east-1.prod.aws.tidbcloud.com --port 4000 --user 38eD4Jgq6QqQ8RQ.53d415ed0601 --database PEhpLdk8FgLQupbR4KLnRK --execute SELECT id, email, role FROM users WHERE email = 'danielrslima@gmail.com' LIMIT 1;",
+  "rows": [
+    {
+      "id": "1",
+      "email": "danielrslima@gmail.com",
+      "role": "admin"
+    }
+  ],
+  "messages": [],
+  "stdout": "id\temail\trole\n1\tdanielrslima@gmail.com\tadmin\n",
+  "stderr": "",
+  "execution_time_ms": 388
+}

@@ -4,7 +4,9 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Badge } from "@/components/ui/badge";
 import { trpc } from "@/lib/trpc";
 import { useLocation, useRoute } from "wouter";
-import { Loader2, ArrowLeft, Download } from "lucide-react";
+import { Loader2, ArrowLeft, Download, Trash2 } from "lucide-react";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 import { formatCurrency, formatDate, formatCPF, formatCNPJ, formatPercent } from "@/lib/format";
 import { generateDemonstratividePDF, generateEsclarecimentosPDF } from "@/lib/pdf-generator";
 import { useState } from "react";
@@ -15,6 +17,16 @@ export default function FormularioDetalhes() {
   const [, setLocation] = useLocation();
   const [generatingDemonstrative, setGeneratingDemonstrative] = useState(false);
   const [generatingEsclarecimentos, setGeneratingEsclarecimentos] = useState(false);
+  const [confirmacaoDelecao, setConfirmacaoDelecao] = useState("");
+  const [deletando, setDeletando] = useState(false);
+  const deleteMutation = trpc.irpf.delete.useMutation({
+    onSuccess: () => {
+      setLocation("/dashboard");
+    },
+    onError: (error: any) => {
+      console.error("Erro ao deletar:", error);
+    },
+  });
 
   // Redirect if not admin
   if (user && user.role !== "admin") {
@@ -293,6 +305,43 @@ export default function FormularioDetalhes() {
           </CardContent>
         </Card>
       </div>
+
+      {/* Seção de Exclusão */}
+      <Card className="border-red-200 bg-red-50">
+        <CardHeader>
+          <CardTitle className="text-red-700">Zona de Perigo - Excluir Formulário</CardTitle>
+          <CardDescription>Esta ação é irreversível. Digite excluir para confirmar.</CardDescription>
+        </CardHeader>
+        <CardContent className="space-y-4">
+          <div>
+            <Label htmlFor="confirmacao">Digite "excluir" para confirmar</Label>
+            <Input
+              id="confirmacao"
+              type="text"
+              placeholder="excluir"
+              value={confirmacaoDelecao}
+              onChange={(e) => setConfirmacaoDelecao(e.target.value)}
+              className="mt-2"
+            />
+          </div>
+          <Button
+            variant="destructive"
+            size="lg"
+            disabled={confirmacaoDelecao !== "excluir" || deletando}
+            onClick={() => {
+              setDeletando(true);
+              deleteMutation.mutate({ id: formId! });
+            }}
+          >
+            {deletando ? (
+              <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+            ) : (
+              <Trash2 className="w-4 h-4 mr-2" />
+            )}
+            {deletando ? "Deletando..." : "Deletar Formulário"}
+          </Button>
+        </CardContent>
+      </Card>
 
       {/* Botões de Ação */}
       <div className="flex gap-4 flex-wrap">
