@@ -64,6 +64,20 @@
       "when": 1767039833808,
       "tag": "0008_steady_dexter_bennett",
       "breakpoints": true
+    },
+    {
+      "idx": 9,
+      "version": "5",
+      "when": 1767046155344,
+      "tag": "0009_slow_scarlet_spider",
+      "breakpoints": true
+    },
+    {
+      "idx": 10,
+      "version": "5",
+      "when": 1767047818895,
+      "tag": "0010_dazzling_ultimates",
+      "breakpoints": true
     }
   ]
 }
